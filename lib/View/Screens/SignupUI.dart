@@ -78,7 +78,7 @@ class SignupUI extends StatelessWidget {
   _inputCard(BuildContext context) {
     return CardBackground(
       child: Container(
-        //height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height,
         padding: const EdgeInsets.only(top: 20.0),
         child: _LoginForm(),
       ),
