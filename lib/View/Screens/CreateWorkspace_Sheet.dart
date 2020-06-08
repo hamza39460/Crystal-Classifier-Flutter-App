@@ -5,6 +5,9 @@ import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
 import 'package:crystal_classifier/View/Widgets/InputWidget.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/appRoutes.dart';
+import 'AllWorkspacesUI.dart';
+
 class CreateWorkSpaceUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -87,7 +90,7 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
   Widget _showCreateButton() {
     return ButtonWidget(
       text: Text(
-        'Signup',
+        'Create Workspace',
         style: TextStyle(
             fontSize: Common.getSPfont(21), fontWeight: FontWeight.bold, color:whiteColor),
         textAlign: TextAlign.center,
@@ -99,7 +102,9 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
   }
 
   _onCreatePress(BuildContext context){
-    //Navigator.of(context).pop();
+    Navigator.of(context).pop();
     debugPrint('Create Workspace pressed');
+    //TODO either goto all workspaces or stay here
+    AppRoutes.replace(context, AllWorkSpacesUI());
   }
 }

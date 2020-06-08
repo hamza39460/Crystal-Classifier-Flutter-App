@@ -27,14 +27,12 @@ class LoginUI extends StatelessWidget {
       child: Consumer<UserController>(builder: (context,userController,child){
         print(userController.getUserAuthState());
         switch(userController.getUserAuthState()){
+          case UserAuthState.Authenticated:
+            return  NoWorkSpaceUI();
           case UserAuthState.Uninitialized:
           case UserAuthState.Unauthenticated:
-          case UserAuthState.Authenticated:
-          {
-            return  NoWorkSpaceUI();
-          }
           case UserAuthState.Error:
-          case UserAuthState.Signup_in_process:
+          case UserAuthState.Login_in_process:
           default:
             return _bodyStack(context);
         }

@@ -7,6 +7,9 @@ import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/BottomNavigationBarWidget.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/appRoutes.dart';
+import 'WorkspaceUI.dart';
+
 class AllWorkSpacesUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -101,18 +104,21 @@ class _WorkspaceList extends StatelessWidget {
         physics: ClampingScrollPhysics(),
         itemCount: _workspacesName.length,
         itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: ListTile(
-              title: Text(
-                _workspacesName[index],
-                style: TextStyle(
-                    fontSize: Common.getSPfont(18), color: blackColor),
-              ),
-              subtitle: Text('Created on:${_dateCreated[index]}',
+          return InkWell(
+                      child: Card(
+              child: ListTile(
+                title: Text(
+                  _workspacesName[index],
                   style: TextStyle(
-                      fontSize: Common.getSPfont(15), color: greyColor1)),
-              trailing: Icon(Icons.navigate_next),
+                      fontSize: Common.getSPfont(18), color: blackColor),
+                ),
+                subtitle: Text('Created on:${_dateCreated[index]}',
+                    style: TextStyle(
+                        fontSize: Common.getSPfont(15), color: greyColor1)),
+                trailing: Icon(Icons.navigate_next),
+              ),
             ),
+            onTap: ()=>AppRoutes.push(context, WorkspaceUI())
           );
         },
       ),

@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import 'NoWorkspaceUI.dart';
+
 class SignupUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,10 +29,10 @@ class SignupUI extends StatelessWidget {
       child: Consumer<UserController>(builder: (context,userController,child){
         print(userController.getUserAuthState());
         switch(userController.getUserAuthState()){
+          case UserAuthState.Authenticated:
+            return NoWorkSpaceUI();
           case UserAuthState.Uninitialized:
           case UserAuthState.Unauthenticated:
-          case UserAuthState.Authenticated:
-            
           case UserAuthState.Error:
           case UserAuthState.Signup_in_process:
           default:

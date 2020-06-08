@@ -46,7 +46,6 @@ class UserController extends ChangeNotifier {
   signupWithEmailAndPwd(String name,String email,String pwd,File image) async {
     _userAuthState = UserAuthState.Signup_in_process;
     notifyListeners();
-    //TODO  NOTIFY LISTENERS
     bool response = await _user.signupWithEmailAndPwd(name,email, pwd, image);
     if(response==true){
       _userAuthState = UserAuthState.Authenticated;
