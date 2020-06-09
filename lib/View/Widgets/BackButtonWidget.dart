@@ -1,4 +1,5 @@
 import 'package:crystal_classifier/View/Utils/Colors.dart';
+import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:crystal_classifier/View/Utils/appRoutes.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class BackButtonWidget extends StatelessWidget {
             size: 30,
           ),
           onPressed: () {
+            Common.closeKeyboard(context);
             AppRoutes.pop(context);
           }),
     );

@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:crystal_classifier/Controller/States.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/View/Screens/LoginUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
+import 'package:crystal_classifier/View/Utils/appRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/BackButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
@@ -124,7 +126,7 @@ class __LoginFormState extends State<_LoginForm> {
           (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
           ? CircularProgressIndicatorWidget()
           : _showGoogleLoginBtn(),
-          Padding(padding: const EdgeInsets.only(bottom:10),)
+          _showLoginText(context),
         ],
         //_showLoginBtn()
       ),
@@ -194,11 +196,12 @@ class __LoginFormState extends State<_LoginForm> {
     return Column(
       children: <Widget>[
         CircleAvatar(
+          backgroundColor: whiteColor,
           backgroundImage:  (imageIsFile==true) ? FileImage(image) : AssetImage('assets/images/person_icon.png'),
           radius: 30,
-        ),
+        ),  
         InkWell(
-                  child: Text(
+          child: Text(
             'Add',
             style: TextStyle(
                 fontSize: Common.getSPfont(15),
@@ -216,15 +219,48 @@ class __LoginFormState extends State<_LoginForm> {
   }
 
 
+   _showLoginText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top:70),
+      child: RichText(
+        text: TextSpan(
+            text: 'Already have an account?',
+            style: TextStyle(color: blackColor, fontSize: Common.getSPfont(15)),
+            children: [
+              WidgetSpan(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left:8.0),
+                    child: InkWell(
+                      child: RichText(
+                        text:TextSpan(
+                          text:'Login here',
+                        style: TextStyle(
+                            color: mosqueColor1, fontSize: Common.getSPfont(15),fontWeight: FontWeight.bold),
+                      ),
+                      ),
+                      onTap: (){
+                        _loginPressed(context);
+                      },
+                    ),
+                  )),
+            ]),
+      ),
+    );
+  }
+
+ _loginPressed(BuildContext context) {
+    AppRoutes.replace(context, LoginUI());
+  }
 
   _googleloginPressed(BuildContext context) {
+    
     setState(() {
       print('Google login pressed');
     });
   }
 
   _signupPressed(BuildContext context) {
-
+      
       print('Signup pressed');
       if(_validateAndSave()==true){
         Provider.of<UserController>(context,listen: false).signupWithEmailAndPwd(name, email, password, image);
@@ -257,6 +293,10 @@ class __LoginFormState extends State<_LoginForm> {
       _nameController.clear();
       _pwdController.clear();
       _emailController.clear();
+      setState(() {
+        imageIsFile = false;  
+        image=null;
+      });
 //      form.reset();
       return true;
     }

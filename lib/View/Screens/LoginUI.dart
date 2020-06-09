@@ -28,7 +28,8 @@ class LoginUI extends StatelessWidget {
         print(userController.getUserAuthState());
         switch(userController.getUserAuthState()){
           case UserAuthState.Authenticated:
-            return  NoWorkSpaceUI();
+              //TODO Instead of returning find a way to Route and Make it first
+              return NoWorkSpaceUI(); 
           case UserAuthState.Uninitialized:
           case UserAuthState.Unauthenticated:
           case UserAuthState.Error:
@@ -193,10 +194,12 @@ class __LoginFormState extends State<_LoginForm> {
                   child: Padding(
                     padding: const EdgeInsets.only(left:8.0),
                     child: InkWell(
-                      child: Text(
-                        'Signup',
+                      child:  RichText(
+                        text:TextSpan(
+                          text:'Signup here',
                         style: TextStyle(
                             color: mosqueColor1, fontSize: Common.getSPfont(15),fontWeight: FontWeight.bold),
+                      ),
                       ),
                       onTap: (){
                         _signupPressed();

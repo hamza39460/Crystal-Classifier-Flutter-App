@@ -20,6 +20,10 @@ class AppRoutes {
     );
   }
 
+  static void removeAllprevious(BuildContext context){
+    Navigator.of(context).popUntil((predicate) => predicate.isFirst);
+  }
+
   static void pop(BuildContext context) {
     Navigator.of(context).pop();
   }
@@ -39,4 +43,5 @@ class AppRoutes {
       isScrollControlled: true,
     );
   }
+
 }

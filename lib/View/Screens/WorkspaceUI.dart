@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:crystal_classifier/View/Utils/appRoutes.dart';
@@ -5,14 +7,31 @@ import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
 import 'package:crystal_classifier/View/Widgets/ExpandTextWidget.dart';
+import 'package:crystal_classifier/View/Widgets/ImageOptionSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 class WorkspaceUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: mosqueColor1,
+        ),
+        backgroundColor: whiteColor,
+        onPressed: () {
+          ImageSelectOptionSheet(
+              context: context,
+              handlerFunction: (ImageSource src) async {
+                File image =
+                    await ImagePicker.pickImage(source: src, imageQuality: 80);
+              });
+        },
+      ),
       body: _bodyStack(context),
     );
   }

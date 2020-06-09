@@ -1,3 +1,4 @@
+import 'package:crystal_classifier/View/Screens/HomeUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:crystal_classifier/View/Widgets/ButtonWidget.dart';
@@ -68,9 +69,11 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
     return InputWidget(
       labelText: 'Title',
       hintText: 'Please enter title of Workspace',
+      validationText: 'Please enter title',
       obscureText: false,
       keyBoardType: TextInputType.emailAddress,
       controller: _titleController,
+      
     );
   }
 
@@ -78,6 +81,7 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
     return InputWidget(
       labelText: 'Description',
       hintText: 'Max 500 Words',
+      validationText: 'Please enter Description',
       obscureText: false,
       keyBoardType: TextInputType.text,
       controller: _descController,
@@ -105,6 +109,6 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
     Navigator.of(context).pop();
     debugPrint('Create Workspace pressed');
     //TODO either goto all workspaces or stay here
-    AppRoutes.replace(context, AllWorkSpacesUI());
+    AppRoutes.replace(context, HomeUI());
   }
 }

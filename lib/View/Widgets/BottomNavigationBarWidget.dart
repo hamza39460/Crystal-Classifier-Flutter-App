@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
-  int selectedIndex = 0;
+  static int selectedIndex = 0;
   final Function(int) callBack;
   BottomNavBarWidget({@required this.callBack});
   @override
@@ -19,7 +19,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
       _BottomNavBarItem(
         icon: Icon(Icons.library_books,size: Common.getSPfont(30)),
         index: 0,
-        color: (widget.selectedIndex == 0) ? mosqueColor1 : greyColor1,
+        color: (BottomNavBarWidget.selectedIndex == 0) ? mosqueColor1 : greyColor1,
         onCountSelected: _onPress,
       ),
       Row(
@@ -27,13 +27,13 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
           _BottomNavBarItem(
         icon: Icon(Icons.search,size: Common.getSPfont(30)),
         index: 1,
-        color: (widget.selectedIndex == 1) ? mosqueColor1 : greyColor1,
+        color: (BottomNavBarWidget.selectedIndex == 1) ? mosqueColor1 : greyColor1,
         onCountSelected: _onPress,
       ),
       _BottomNavBarItem(
         icon: Icon(CupertinoIcons.person_solid,size: Common.getSPfont(30)),
         index: 2,
-        color: (widget.selectedIndex == 2) ? mosqueColor1 : greyColor1,
+        color: (BottomNavBarWidget.selectedIndex == 2) ? mosqueColor1 : greyColor1,
         onCountSelected: _onPress,
       ),
         ],
@@ -52,11 +52,14 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
   }
 
   _onPress(int selectedIdex) {
+    Common.closeKeyboard(context);
     setState(() {
-      widget.selectedIndex = selectedIdex;
+      BottomNavBarWidget.selectedIndex = selectedIdex;
     });
-    widget.callBack(widget.selectedIndex);
+    widget.callBack(BottomNavBarWidget.selectedIndex);
   }
+
+
 }
 
 class _BottomNavBarItem extends StatelessWidget {

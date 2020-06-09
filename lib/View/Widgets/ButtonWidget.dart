@@ -1,4 +1,5 @@
 import 'package:crystal_classifier/View/Utils/Colors.dart';
+import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:flutter/material.dart';
 
 
@@ -26,14 +27,17 @@ class ButtonWidget extends StatelessWidget {
             ),
           ),
           onPressed: () {
+            Common.closeKeyboard(context);
             onPress(context);
           }),
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
-            color: shadowColor,
-            blurRadius: 10,
+            color:  (shadowColor!=null) ? shadowColor:whiteColor,
+            blurRadius: (shadowColor!=null) ? 10:0,
             spreadRadius: 0,
-            offset: Offset(0.0, 5.0),),],
+            offset: (shadowColor!=null) ? Offset(0.0, 5.0):Offset(0,0),
+            ),
+            ],
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(20),
            

@@ -36,6 +36,10 @@ class User {
 
   }
 
+   Future<bool> signout()async{
+    return await _firebaseController.signout();
+  }
+
   void setUserRef(DocumentReference documentReference){
 
   }
@@ -43,4 +47,8 @@ class User {
   DocumentReference getUserDbRef(){
 
   }
+
+  String getImageUrl()=>_userDetails.getImageUrl();
+
+  Map<String, String>getUserDetails()=>_userDetails.getUserDetails();
 }

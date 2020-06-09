@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 
 class CardBackground extends StatelessWidget {
   final Widget child;
-  CardBackground({this.child});
+  BorderRadius borderRadius =BorderRadius.only(
+                topLeft: const Radius.circular(20.0),
+                topRight: const Radius.circular(20.0),
+              );
+  CardBackground({@required this.child,this.borderRadius});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,10 +15,7 @@ class CardBackground extends StatelessWidget {
       //height: MediaQuery.of(context).size.height*0.40,
       decoration: BoxDecoration(
             color: greyColor0,
-             borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(20.0),
-                topRight: const Radius.circular(20.0),
-              )
+             borderRadius: borderRadius
           ),
       child: child,
     );

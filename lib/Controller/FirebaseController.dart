@@ -84,6 +84,21 @@ class FirebaseController {
       return false;
     }
   }
+
+  Future<bool> signout() async{
+    try{
+      await _firebaseAuth.signOut();
+      return true;
+    }
+    catch(e){
+      String _message = _getError(e);
+      CustomSnackbar().showError(_message);
+      print('signup error $e');
+      return false;
+    }
+  }
+  
+
   Future<void> _authStateChanged(FirebaseUser user) async {
     if (user == null) {
       UserController.init().setUserAuthState(UserAuthState.Unauthenticated);

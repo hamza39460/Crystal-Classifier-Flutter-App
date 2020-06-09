@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 
 class Common{
@@ -7,5 +8,12 @@ class Common{
   }
   static getSPfont(double xdFont){
     return ScreenUtil().setSp(xdFont*3);
+  }
+  static closeKeyboard(context){
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
   }
 }

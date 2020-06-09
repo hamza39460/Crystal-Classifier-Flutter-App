@@ -1,4 +1,6 @@
+import 'package:crystal_classifier/Controller/UserController.dart';
 import 'package:crystal_classifier/View/Screens/CreateWorkspace_Sheet.dart';
+import 'package:crystal_classifier/View/Screens/UserProfileUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:crystal_classifier/View/Utils/appRoutes.dart';
@@ -10,26 +12,36 @@ import 'package:flutter/material.dart';
 import '../Utils/appRoutes.dart';
 import 'WorkspaceUI.dart';
 
+
+
+
 class AllWorkSpacesUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Common.ScreenInit(context);
+    
     return Scaffold(
-      body: _bodyStack(context),
-      bottomNavigationBar: BottomNavBarWidget(
-        callBack: (int) {
-          print('hello');
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: mosqueColor1,
-        onPressed: () {
-          _addWorkspacePress(context);
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body:_bodyStack(context),
     );
+    // Common.ScreenInit(context);
+    // return Scaffold(
+    //   body: _bodyStack(context),
+    //   bottomNavigationBar: BottomNavBarWidget(
+    //     callBack: (int i) {
+    //       print('bottom nav bar callback:$i');
+    //       if(i==2){
+    //         AppRoutes.push(context, UserProfileUI());
+    //       }
+    //     },
+    //   ),
+    //   floatingActionButton: FloatingActionButton(
+    //     child: Icon(Icons.add),
+    //     backgroundColor: mosqueColor1,
+    //     onPressed: () {
+    //       _addWorkspacePress(context);
+    //     },
+    //   ),
+    //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    // );
   }
 
   _bodyStack(BuildContext context) {
@@ -63,7 +75,16 @@ class AllWorkSpacesUI extends StatelessWidget {
                         color: whiteColor),
                   ),
                 )),
-            _WorkspaceList()
+            _WorkspaceList(),
+            Align(
+              alignment: Alignment.bottomRight,
+                          child: FlatButton(
+                child: Text('LOGOUT',style: TextStyle(color: whiteColor),),
+                onPressed: (){
+                  UserController.init().signOut();
+                },
+              ),
+            )
           ],
         ),
       ),

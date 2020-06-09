@@ -58,9 +58,15 @@ class UserController extends ChangeNotifier {
     //notifyListeners
   }
 
+  signOut()async{
+    await _user.signout();
+  }
+
   bool updateUserDetails(String email,{String name, String pwd}){
 
   }
+
+  Map<String, String>getUserDetails()=>_user.getUserDetails();
 
   void setUserRef(DocumentReference documentReference){
 
@@ -76,6 +82,7 @@ class UserController extends ChangeNotifier {
   }
 
   UserAuthState getUserAuthState()=>this._userAuthState;
+
 
 
 }
