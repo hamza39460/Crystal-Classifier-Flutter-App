@@ -4,6 +4,7 @@ import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:crystal_classifier/View/Utils/appRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
+import 'package:crystal_classifier/View/Widgets/BackButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
 import 'package:crystal_classifier/View/Widgets/ExpandTextWidget.dart';
@@ -53,7 +54,12 @@ class WorkspaceUI extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Center(
-              child: AppTitle(),
+              child: Row(
+                children: [
+                  BackButtonWidget(),
+                  AppTitle(),
+                ],
+              )
             ),
             Padding(
               padding: const EdgeInsets.only(left: 14.0, top: 20),

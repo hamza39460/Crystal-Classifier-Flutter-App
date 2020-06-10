@@ -12,12 +12,6 @@ class User {
 
   Future<bool> loginWithEmailAndPwd(String email,String pwd) async {
     bool response =await _firebaseController.loginWithEmailAndPwd(email, pwd);
-    if(response==true){
-      _userDetails=UserDescriptor();
-      response = await _firebaseController.getUserFromDB(_userDetails, email);
-      print("User: $_userDetails");
-    }
-
     return response;
     
   }
@@ -30,6 +24,13 @@ class User {
     }
     return response;
 
+  }
+
+  Future<bool> getUserFromDB(email) async {
+      _userDetails=UserDescriptor();
+      bool response = await _firebaseController.getUserFromDB(_userDetails, email);
+      print("User: $_userDetails");
+      return response;
   }
 
   bool updateUserDetails(String email,{String name, String pwd}){

@@ -76,15 +76,15 @@ class AllWorkSpacesUI extends StatelessWidget {
                   ),
                 )),
             _WorkspaceList(),
-            Align(
-              alignment: Alignment.bottomRight,
-                          child: FlatButton(
-                child: Text('LOGOUT',style: TextStyle(color: whiteColor),),
-                onPressed: (){
-                  UserController.init().signOut();
-                },
-              ),
-            )
+            // Align(
+            //   alignment: Alignment.bottomRight,
+            //               child: FlatButton(
+            //     child: Text('LOGOUT',style: TextStyle(color: whiteColor),),
+            //     onPressed: (){
+            //       UserController.init().signOut();
+            //     },
+            //   ),
+            // )
           ],
         ),
       ),

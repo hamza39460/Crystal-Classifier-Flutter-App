@@ -9,7 +9,7 @@ class UserController extends ChangeNotifier {
   static final UserController _selfInstance = UserController._internal();
   static final User _user =User.init();
   UserAuthState _userAuthState = UserAuthState.Uninitialized;
-  
+  UserDataState _userDataState = UserDataState.Uninitialized;
 
   UserController._internal(){
     /** 
@@ -36,12 +36,25 @@ class UserController extends ChangeNotifier {
     if(response==true){
       _userAuthState = UserAuthState.Authenticated;
       notifyListeners();
+      _userDataState = UserDataState.Fetching_User_Data;
+      notifyListeners();
+      _user.getUserFromDB(email).then((value){
+        if(value==true)
+          _userDataState = UserDataState.Fetched_User_Data;
+        else
+          _userDataState = UserDataState.Error;
+        notifyListeners();
+
+      });
+
     }  
     else if (response==false){
       _userAuthState = UserAuthState.Error;
       notifyListeners();
     }
   }
+
+  
 
   signupWithEmailAndPwd(String name,String email,String pwd,File image) async {
     _userAuthState = UserAuthState.Signup_in_process;
@@ -83,6 +96,6 @@ class UserController extends ChangeNotifier {
 
   UserAuthState getUserAuthState()=>this._userAuthState;
 
-
+  UserDataState getUserDataState()=>this._userDataState;
 
 }
