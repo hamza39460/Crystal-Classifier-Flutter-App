@@ -1,4 +1,4 @@
-package com.fastnu.crystal_classifier
+package com.fastnu.crystalClassifier
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

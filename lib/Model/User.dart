@@ -20,6 +20,7 @@ class User {
     bool response = await _firebaseController.signUpWithEmailAndPassword(email, pwd);
     if(response==true){
       _userDetails=UserDescriptor.init(name, email);
+      
       response = await _firebaseController.addUserToDb(_userDetails, image);
     }
     return response;

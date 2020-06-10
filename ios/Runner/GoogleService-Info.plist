@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>60394665868-bh076a5bdrdgh807iipv7op5gl7fb9dv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.60394665868-bh076a5bdrdgh807iipv7op5gl7fb9dv</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>60394665868-52mojrgaf12fm3a3e0v5l3hkms4fbm5o.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCho5Tm0sHhQUnKgukxGim3zLZGmColMX4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>60394665868</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.fastnu.crystalClassifier</string>
+	<key>PROJECT_ID</key>
+	<string>pashto-quran-app-demo</string>
+	<key>STORAGE_BUCKET</key>
+	<string>pashto-quran-app-demo.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:60394665868:ios:e3d57ff5b04e8c561b48a9</string>
+	<key>DATABASE_URL</key>
+	<string>https://pashto-quran-app-demo.firebaseio.com</string>
+</dict>
+</plist>

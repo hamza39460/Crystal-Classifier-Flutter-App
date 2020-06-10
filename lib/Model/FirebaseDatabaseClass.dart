@@ -13,9 +13,10 @@ class FirebaseDatabaseClass{
 
   addUserToDB(UserDescriptor user,File image)async{
     try{
-      Map<String,dynamic> data=user.getUserDetails();
-    StorageUploadTask uploadTask = addImageToDb(data['Email'], image);
-    var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      print('inner $user');
+      Map<String,dynamic> data=user.getUserDetails  ();
+      StorageUploadTask uploadTask = addImageToDb(data['Email'], image);
+      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     _db.collection('Users').document(data['Email']).collection('Personal Info').document().setData(
       {
       'Name':data['Name'],
@@ -26,6 +27,7 @@ class FirebaseDatabaseClass{
     }
     catch(e)
     {
+      
       throw e;
     }
   }

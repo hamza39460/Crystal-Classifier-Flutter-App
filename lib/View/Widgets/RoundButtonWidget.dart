@@ -1,4 +1,5 @@
 import 'package:crystal_classifier/View/Utils/Colors.dart';
+import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:flutter/material.dart';
 
 class RoundButtonWidget extends StatelessWidget {
@@ -23,6 +24,7 @@ class RoundButtonWidget extends StatelessWidget {
                 size: 30,
               ),
               onPressed: () {
+                Common.closeKeyboard(context);
                 onPress(context);
                 //AppRoutes.pop(context);
               }),
