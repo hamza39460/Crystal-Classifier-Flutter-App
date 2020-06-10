@@ -29,6 +29,8 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _descController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FocusNode titleNode = FocusNode();
+  final FocusNode descNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -71,8 +73,11 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
       hintText: 'Please enter title of Workspace',
       validationText: 'Please enter title',
       obscureText: false,
+      myNode: titleNode,
+      nextNode: descNode,
       keyBoardType: TextInputType.emailAddress,
       controller: _titleController,
+      textInputAction: TextInputAction.next,
       
     );
   }
@@ -85,6 +90,11 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
       obscureText: false,
       keyBoardType: TextInputType.text,
       controller: _descController,
+      myNode: descNode,
+      textInputAction: TextInputAction.done,
+      onSubmit: (dynamic){
+        _onCreatePress(context);
+      },
       maxLines: 10,
       maxLength: 500,
 

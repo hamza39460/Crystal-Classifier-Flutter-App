@@ -94,30 +94,35 @@ class __LoginFormState extends State<_LoginForm> {
   final TextEditingController _pwdController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String email, password;
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _pwdNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        children: <Widget>[
-          _showEmailInput(),
-          _showPwdInput(),
-          _showForgotPasswordInput(),
-          (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Login_in_process)
-          ? CircularProgressIndicatorWidget()
-          :_showLoginBtn(),
-          Container(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                'Or Google Account',
-                style: TextStyle(fontSize: Common.getSPfont(15)),
-              )),
-          (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Login_in_process)
-          ? CircularProgressIndicatorWidget()
-          :_showGoogleLoginBtn(),
-          _showSignupText(context),
-        ],
-        //_showLoginBtn()
+      child: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+              child: Column(
+          children: <Widget>[
+            _showEmailInput(),
+            _showPwdInput(),
+            _showForgotPasswordInput(),
+            (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Login_in_process)
+            ? CircularProgressIndicatorWidget()
+            :_showLoginBtn(),
+            Container(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'Or Google Account',
+                  style: TextStyle(fontSize: Common.getSPfont(15)),
+                )),
+            (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Login_in_process)
+            ? CircularProgressIndicatorWidget()
+            :_showGoogleLoginBtn(),
+            _showSignupText(context),
+          ],
+          //_showLoginBtn()
+        ),
       ),
     );
   }
@@ -128,10 +133,13 @@ class __LoginFormState extends State<_LoginForm> {
       hintText: 'Please enter your email',
       obscureText: false,
       keyBoardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
       controller: _emailController,
       onSaved: (value) {  
         email=value.trim();
       },
+      myNode: _emailNode,
+      nextNode: _pwdNode,
       validationText: 'Please enter your email',
     );
   }
@@ -144,9 +152,14 @@ class __LoginFormState extends State<_LoginForm> {
       keyBoardType: TextInputType.visiblePassword,
       controller: _pwdController,
       maxLines: 1,
+      myNode:_pwdNode,
+      textInputAction: TextInputAction.done,
       validationText: 'Please enter password',
       onSaved: (value) { 
         password=value.trim();
+       },
+       onSubmit: (dynamic){
+         _loginPressed(context);
        },
     );
   }

@@ -101,34 +101,41 @@ class __LoginFormState extends State<_LoginForm> {
   bool imageIsFile=false;
   String name,email,password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final FocusNode _nameNode = FocusNode();
+  final FocusNode _emailNode = FocusNode();
+  final FocusNode _pwdNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        //shrinkWrap: true,
-        //physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          _showImageInput(),
-          _showNameInput(),
-          _showEmailInput(),
-          _showPwdInput(),
-          (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
-          ? CircularProgressIndicatorWidget()
-          : _showLoginBtn(),
-          Container(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                'Or Google Account',
-                style: TextStyle(fontSize: Common.getSPfont(15)),
-              )),
-          (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
-          ? CircularProgressIndicatorWidget()
-          : _showGoogleLoginBtn(),
-          _showLoginText(context),
-        ],
-        //_showLoginBtn()
+      child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(), //ClampingScrollPhysics(),
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            //shrinkWrap: true,
+            //physics: NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              Center(child:_showImageInput()),
+              _showNameInput(),
+              _showEmailInput(),
+              _showPwdInput(),
+              (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
+              ? CircularProgressIndicatorWidget()
+              : _showLoginBtn(),
+              Container(
+          padding: const EdgeInsets.all(20),
+          child: Text(
+            'Or Google Account',
+            style: TextStyle(fontSize: Common.getSPfont(15)),
+            textAlign: TextAlign.center,
+          )),
+              (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
+              ? CircularProgressIndicatorWidget()
+              : _showGoogleLoginBtn(),
+              _showLoginText(context),
+            ],
+            //_showLoginBtn()
+          ),
       ),
     );
   }
@@ -141,6 +148,10 @@ class __LoginFormState extends State<_LoginForm> {
       keyBoardType: TextInputType.text,
       controller: _nameController,
       validationText: 'Please enter your name',
+      textInputAction: TextInputAction.next,
+      myNode: _nameNode,
+      nextNode: _emailNode,
+
       onSaved: (value) { 
         name=value.trim();
        },
@@ -155,6 +166,9 @@ class __LoginFormState extends State<_LoginForm> {
       obscureText: false,
       keyBoardType: TextInputType.emailAddress,
       controller: _emailController,
+      textInputAction: TextInputAction.next,
+      myNode: _emailNode,
+      nextNode: _pwdNode,
       onSaved: (value) {  
         email=value.trim();
       },
@@ -170,6 +184,11 @@ class __LoginFormState extends State<_LoginForm> {
       keyBoardType: TextInputType.visiblePassword,
       controller: _pwdController,
       maxLines: 1,
+      textInputAction: TextInputAction.done,
+      myNode: _pwdNode,
+      onSubmit: (dynamic){
+        _signupPressed(context);
+      },
       onSaved: (value) { 
         password=value.trim();
        },
