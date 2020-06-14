@@ -59,10 +59,17 @@ class UserController extends ChangeNotifier {
   signupWithEmailAndPwd(String name,String email,String pwd,File image) async {
     _userAuthState = UserAuthState.Signup_in_process;
     notifyListeners();
-    bool response = await _user.signupWithEmailAndPwd(name,email, pwd, image);
+    bool response = await _user.signupWithEmailAndPwd(name,email, pwd);
     if(response==true){
-      _userAuthState = UserAuthState.Authenticated;
-    notifyListeners();
+      response = await _user.addUserToDB(image);
+      if(response == true){
+        _userAuthState = UserAuthState.Authenticated;
+        notifyListeners();
+        }
+      else{
+        _userAuthState = UserAuthState.Error;
+         notifyListeners();
+      }
     }  
     else if (response==false){
       _userAuthState = UserAuthState.Error;
@@ -85,9 +92,7 @@ class UserController extends ChangeNotifier {
 
   }
 
-  DocumentReference getUserDbRef(){
-
-  }
+  DocumentReference getUserDbRef()=>_user.getUserDbRef();
 
   setUserAuthState(UserAuthState userAuthState){
     this._userAuthState=userAuthState;

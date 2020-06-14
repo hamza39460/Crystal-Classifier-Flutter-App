@@ -5,7 +5,7 @@ import 'package:crystal_classifier/Model/UserDescriptor.dart';
 
 class User {
   UserDescriptor _userDetails;
-  DocumentReference userRef;
+  DocumentReference _userRef;
   static final FirebaseController _firebaseController =  FirebaseController.init();
   
   User.init();
@@ -16,12 +16,10 @@ class User {
     
   }
 
-  Future<bool> signupWithEmailAndPwd(String name,String email,String pwd,File image) async{
+  Future<bool> signupWithEmailAndPwd(String name,String email,String pwd) async{
     bool response = await _firebaseController.signUpWithEmailAndPassword(email, pwd);
     if(response==true){
       _userDetails=UserDescriptor.init(name, email);
-      
-      response = await _firebaseController.addUserToDb(_userDetails, image);
     }
     return response;
 
@@ -29,9 +27,14 @@ class User {
 
   Future<bool> getUserFromDB(email) async {
       _userDetails=UserDescriptor();
-      bool response = await _firebaseController.getUserFromDB(_userDetails, email);
+      bool response = await _firebaseController.getUserFromDB(_userDetails, email,_userRef);
       print("User: $_userDetails");
       return response;
+  }
+
+  Future<bool> addUserToDB(File image) async{
+    bool response = await _firebaseController.addUserToDb(_userDetails, image,_userRef);
+    return response;
   }
 
   bool updateUserDetails(String email,{String name, String pwd}){
@@ -46,9 +49,7 @@ class User {
 
   }
 
-  DocumentReference getUserDbRef(){
-
-  }
+  DocumentReference getUserDbRef()=>_userRef;
 
   String getImageUrl()=>_userDetails.getImageUrl();
 

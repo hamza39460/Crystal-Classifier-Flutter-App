@@ -26,11 +26,12 @@ class SignupUI extends StatelessWidget {
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
     return Scaffold(
-      body:ChangeNotifierProvider.value(
-      value:UserController.init(),
-      child: Consumer<UserController>(builder: (context,userController,child){
+        body: ChangeNotifierProvider.value(
+      value: UserController.init(),
+      child:
+          Consumer<UserController>(builder: (context, userController, child) {
         print(userController.getUserAuthState());
-        switch(userController.getUserAuthState()){
+        switch (userController.getUserAuthState()) {
           case UserAuthState.Authenticated:
             return NoWorkSpaceUI();
           case UserAuthState.Uninitialized:
@@ -41,9 +42,9 @@ class SignupUI extends StatelessWidget {
             return _bodyStack(context);
         }
       }),
-      )
-       //
-    );
+    )
+        //
+        );
   }
 
   _bodyStack(BuildContext context) {
@@ -58,7 +59,8 @@ class SignupUI extends StatelessWidget {
   _bodyColumn(BuildContext context) {
     return SingleChildScrollView(
         child: ListView(
-      shrinkWrap: true,physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
       children: <Widget>[
         BackButtonWidget(),
         Container(
@@ -98,49 +100,61 @@ class __LoginFormState extends State<_LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
   File image;
-  bool imageIsFile=false;
-  String name,email,password;
+  bool imageIsFile = false;
+  String name, email, password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FocusNode _nameNode = FocusNode();
   final FocusNode _emailNode = FocusNode();
   final FocusNode _pwdNode = FocusNode();
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<UserController>(context).getUserAuthState() ==
+        UserAuthState.Error) {
+      _nameController.clear();
+      _pwdController.clear();
+      _emailController.clear();
+      setState(() {
+        imageIsFile = false;
+        image = null;
+      });
+    }
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(), //ClampingScrollPhysics(),
-              child: Column(
-            mainAxisSize: MainAxisSize.min,
-            //shrinkWrap: true,
-            //physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              Center(child:_showImageInput()),
-              _showNameInput(),
-              _showEmailInput(),
-              _showPwdInput(),
-              (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
-              ? CircularProgressIndicatorWidget()
-              : _showLoginBtn(),
-              Container(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            'Or Google Account',
-            style: TextStyle(fontSize: Common.getSPfont(15)),
-            textAlign: TextAlign.center,
-          )),
-              (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Signup_in_process)
-              ? CircularProgressIndicatorWidget()
-              : _showGoogleLoginBtn(),
-              _showLoginText(context),
-            ],
-            //_showLoginBtn()
-          ),
+        physics: NeverScrollableScrollPhysics(), //ClampingScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          //shrinkWrap: true,
+          //physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[
+            Center(child: _showImageInput()),
+            _showNameInput(),
+            _showEmailInput(),
+            _showPwdInput(),
+            (Provider.of<UserController>(context).getUserAuthState() ==
+                    UserAuthState.Signup_in_process)
+                ? CircularProgressIndicatorWidget()
+                : _showLoginBtn(),
+            Container(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'Or Google Account',
+                  style: TextStyle(fontSize: Common.getSPfont(15)),
+                  textAlign: TextAlign.center,
+                )),
+            (Provider.of<UserController>(context).getUserAuthState() ==
+                    UserAuthState.Signup_in_process)
+                ? CircularProgressIndicatorWidget()
+                : _showGoogleLoginBtn(),
+            _showLoginText(context),
+          ],
+          //_showLoginBtn()
+        ),
       ),
     );
   }
 
-   _showNameInput() {
+  _showNameInput() {
     return InputWidget(
       labelText: 'Name',
       hintText: 'Please enter your name',
@@ -151,10 +165,9 @@ class __LoginFormState extends State<_LoginForm> {
       textInputAction: TextInputAction.next,
       myNode: _nameNode,
       nextNode: _emailNode,
-
-      onSaved: (value) { 
-        name=value.trim();
-       },
+      onSaved: (value) {
+        name = value.trim();
+      },
     );
   }
 
@@ -169,8 +182,8 @@ class __LoginFormState extends State<_LoginForm> {
       textInputAction: TextInputAction.next,
       myNode: _emailNode,
       nextNode: _pwdNode,
-      onSaved: (value) {  
-        email=value.trim();
+      onSaved: (value) {
+        email = value.trim();
       },
     );
   }
@@ -186,18 +199,18 @@ class __LoginFormState extends State<_LoginForm> {
       maxLines: 1,
       textInputAction: TextInputAction.done,
       myNode: _pwdNode,
-      onSubmit: (dynamic){
+      onSubmit: (dynamic) {
         _signupPressed(context);
       },
-      onSaved: (value) { 
-        password=value.trim();
-       },
+      onSaved: (value) {
+        password = value.trim();
+      },
     );
   }
 
   _showLoginBtn() {
     return Padding(
-      padding: const EdgeInsets.only(top:10),
+      padding: const EdgeInsets.only(top: 10),
       child: RoundButtonWidget(
           icon: Icons.forward,
           iconColor: whiteColor,
@@ -216,20 +229,22 @@ class __LoginFormState extends State<_LoginForm> {
       children: <Widget>[
         CircleAvatar(
           backgroundColor: whiteColor,
-          backgroundImage:  (imageIsFile==true) ? FileImage(image) : AssetImage('assets/images/person_icon.png'),
+          backgroundImage: (imageIsFile == true)
+              ? FileImage(image)
+              : AssetImage('assets/images/person_icon.png'),
           radius: 30,
-        ),  
+        ),
         InkWell(
           child: Text(
             'Add',
             style: TextStyle(
-                fontSize: Common.getSPfont(15),
-                color: mosqueColor1,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                ),
+              fontSize: Common.getSPfont(15),
+              color: mosqueColor1,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
+            ),
           ),
-          onTap: (){
+          onTap: () {
             _addImagePress();
           },
         ),
@@ -237,10 +252,9 @@ class __LoginFormState extends State<_LoginForm> {
     );
   }
 
-
-   _showLoginText(BuildContext context) {
+  _showLoginText(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:70),
+      padding: const EdgeInsets.only(top: 70),
       child: RichText(
         text: TextSpan(
             text: 'Already have an account?',
@@ -248,81 +262,73 @@ class __LoginFormState extends State<_LoginForm> {
             children: [
               WidgetSpan(
                   child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: InkWell(
-                      child: RichText(
-                        text:TextSpan(
-                          text:'Login here',
-                        style: TextStyle(
-                            color: mosqueColor1, fontSize: Common.getSPfont(15),fontWeight: FontWeight.bold),
-                      ),
-                      ),
-                      onTap: (){
-                        _loginPressed(context);
-                      },
+                padding: const EdgeInsets.only(left: 8.0),
+                child: InkWell(
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Login here',
+                      style: TextStyle(
+                          color: mosqueColor1,
+                          fontSize: Common.getSPfont(15),
+                          fontWeight: FontWeight.bold),
                     ),
-                  )),
+                  ),
+                  onTap: () {
+                    _loginPressed(context);
+                  },
+                ),
+              )),
             ]),
       ),
     );
   }
 
- _loginPressed(BuildContext context) {
+  _loginPressed(BuildContext context) {
     AppRoutes.replace(context, LoginUI());
   }
 
   _googleloginPressed(BuildContext context) {
-    
     setState(() {
       print('Google login pressed');
     });
   }
 
   _signupPressed(BuildContext context) {
-      
-      print('Signup pressed');
-      if(_validateAndSave()==true){
-        Provider.of<UserController>(context,listen: false).signupWithEmailAndPwd(name, email, password, image);
-      }
-      else
+    print('Signup pressed');
+    if (_validateAndSave() == true) {
+      Provider.of<UserController>(context, listen: false)
+          .signupWithEmailAndPwd(name, email, password, image);
+    } else
       print('not next');
   }
 
-  _addImagePress(){
+  _addImagePress() {
     // setState(() {
     //   print('add image pressed');
     // });
-       print('add image pressed');
-       ImageSelectOptionSheet(context: context,handlerFunction: _getImageFile);
+    print('add image pressed');
+    ImageSelectOptionSheet(context: context, handlerFunction: _getImageFile);
   }
 
-  _getImageFile(ImageSource src) async{
-      image = await ImagePicker.pickImage(source: src,imageQuality: 80);
-      if(image!=null){
-        setState(() {
-        imageIsFile = true;  
-        });
-      }
+  _getImageFile(ImageSource src) async {
+    image = await ImagePicker.pickImage(source: src, imageQuality: 80);
+    if (image != null) {
+      setState(() {
+        imageIsFile = true;
+      });
+    }
   }
 
   bool _validateAndSave() {
     final form = _formKey.currentState;
-    if (form.validate()&&imageIsFile==true) {
+    if (form.validate() && imageIsFile == true) {
       form.save();
-      _nameController.clear();
-      _pwdController.clear();
-      _emailController.clear();
-      setState(() {
-        imageIsFile = false;  
-        image=null;
-      });
+
 //      form.reset();
       return true;
-    }
-    else if(imageIsFile==false){
+    } else if (imageIsFile == false) {
       CustomSnackbar().showError("Please Input your Image");
     }
     return false;
   }
-
 }

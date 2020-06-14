@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crystal_classifier/Controller/States.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
 import 'package:crystal_classifier/Model/FirebaseAuthClass.dart';
 import 'package:crystal_classifier/Model/FirebaseDatabaseClass.dart';
 import 'package:crystal_classifier/Model/UserDescriptor.dart';
+import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:crystal_classifier/View/Widgets/CustomSnackbar.dart';
 
@@ -61,9 +63,9 @@ class FirebaseController {
     }
   }
 
-  Future <bool> addUserToDb(UserDescriptor user,File image)async {
+  Future <bool> addUserToDb(UserDescriptor user,File image,DocumentReference userRef)async {
       try{
-      await _firebaseDatabase.addUserToDB(user, image);
+      await _firebaseDatabase.addUserToDB(user, image,userRef);
       return true;
       }
       catch(e){
@@ -73,9 +75,9 @@ class FirebaseController {
       
   }
 
-  Future<bool> getUserFromDB(UserDescriptor user,String email)async{
+  Future<bool> getUserFromDB(UserDescriptor user,String email,DocumentReference userRef)async{
     try{
-      await _firebaseDatabase.getUserFromDB(email, user);
+      await _firebaseDatabase.getUserFromDB(email, user,userRef);
       print("User01: ${user.getUserDetails()}");
       return true;
     }
@@ -98,7 +100,55 @@ class FirebaseController {
     }
   }
   
+  Future<bool> updateUserDetails(String email, String name,String password, File image){ 
+      //TODO
+  }
 
+  Future<bool> createWorkSpace(WorkspaceDescriptor descriptor,DocumentReference userDB) async {
+    try{
+      await _firebaseDatabase.createWorkSpace(descriptor, userDB);
+      return true;
+    }
+    catch(e){
+      print('Create Workspace error $e');
+      CustomSnackbar().showError('Error $e');
+      return false;
+    }
+  }
+
+  bool changeCurrentWorkSpace(String name){
+
+  }
+
+  Future<bool> fetchAllWorkspaces(DocumentReference userDB,List<WorkspaceDescriptor> workSpaceList) async {
+    try{
+       List<DocumentSnapshot> workspaceList =  await _firebaseDatabase.fetchAllWorkSpace(userDB);
+       for (DocumentSnapshot workspaceSnapshot in workspaceList){
+          WorkspaceDescriptor workspace = WorkspaceDescriptor.previous(workspaceSnapshot.documentID, workspaceSnapshot.data['Name'], workspaceSnapshot.data['Description'], workspaceSnapshot.data['Created on']);
+          workSpaceList.add(workspace);
+
+       }
+    }
+    catch(e){
+      print('Get all workspace error $e');
+      return false;
+    }
+
+  }
+
+  Future<bool>deleteWorkspace(){
+
+  }
+
+  Future<bool> updateWorkSpaceDetails(String preName, String newName, String description){
+
+  }
+
+  List<dynamic> getAllResultsofCurrent(){
+
+  }
+
+   
   Future<void> _authStateChanged(FirebaseUser user) async {
     if (user == null) {
       UserController.init().setUserAuthState(UserAuthState.Unauthenticated);
@@ -112,6 +162,7 @@ class FirebaseController {
     //print(_loginStatus);
   }
 
+  
   
   
   String _getError(e) {

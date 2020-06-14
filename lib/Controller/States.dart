@@ -13,3 +13,11 @@ enum UserDataState{
     Fetched_User_Data,
     Error,
 }
+
+enum WorkspaceState{
+  Uninitialized,
+  Fetching_All_Workspaces,
+  No_Workspace_found,
+  ALl_Workspaces_Fetched,
+  Error,
+}

@@ -7,6 +7,8 @@ import 'package:crystal_classifier/View/Utils/appRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/BottomNavigationBarWidget.dart';
 import 'package:flutter/material.dart';
 
+
+
 class HomeUI extends StatefulWidget {
   @override
   _HomeUIState createState() => _HomeUIState();
