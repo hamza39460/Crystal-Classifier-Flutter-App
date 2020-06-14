@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class CircularProgressIndicatorWidget extends StatelessWidget {
   Color color = mosqueColor1;
-  CircularProgressIndicatorWidget({this.color})
+  CircularProgressIndicatorWidget({this.color});
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicator(
