@@ -313,7 +313,7 @@ class __LoginFormState extends State<_LoginForm> {
   }
 
   _getImageFile(ImageSource src) async {
-    image = await ImagePicker.pickImage(source: src, imageQuality: 80);
+    image = await ImagePicker.pickImage(source: src, imageQuality: 50);
     if (image != null) {
       setState(() {
         imageIsFile = true;

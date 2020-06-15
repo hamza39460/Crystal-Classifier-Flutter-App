@@ -35,6 +35,7 @@ class User {
   }
 
   Future<bool> addUserToDB(File image) async{
+    
     bool response = await _firebaseController.addUserToDb(_userDetails, image,);
     return response;
   }

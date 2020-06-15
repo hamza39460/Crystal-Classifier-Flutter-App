@@ -114,6 +114,7 @@ class UserProfileUI extends StatelessWidget {
   }
 
   _showImage() {
+    print("Image url ${UserController.init().getUserDetails()['Image']}");
     return Column(
       children: <Widget>[
         // CircleAvatar(
@@ -129,15 +130,36 @@ class UserProfileUI extends StatelessWidget {
         //   width: 80,
         //   height: 80,
         // )),
+
+        // CachedNetworkImage(
+        //   imageUrl: UserController.init().getUserDetails()['Image'],
+        //   imageBuilder: (context, imageProvider) => Container(
+        //     decoration: BoxDecoration(
+        //       shape: BoxShape.circle,
+        //       image: DecorationImage(
+        //           image: imageProvider,
+        //           fit: BoxFit.cover,
+        //           // colorFilter:
+        //           //     ColorFilter.mode(Colors.red, BlendMode.colorBurn)
+        //               ),
+        //     ),
+        //   ),
+        //   placeholder: (context, url) => CircularProgressIndicator(),
+        //   errorWidget: (context, url, error) => Icon(Icons.error),
+        // ),
         new Container(
             width: 100,
             height: 100,
             decoration: new BoxDecoration(
                 shape: BoxShape.circle,
                 image: new DecorationImage(
-                    fit: BoxFit.fill,
-                    image: CacheImage(UserController.init().getUserDetails()['Image'])
-                        )))
+                  fit: BoxFit.scaleDown,
+                  //  image:  CachedNetworkImage(imageUrl:UserController.init().getUserDetails()['Image'] )
+                  image: CacheImage(
+                     UserController.init().getUserDetails()['Image'],
+                  //   )
+                )))
+                )
         // InkWell(
         //   child: Text(
         //     'Add',
