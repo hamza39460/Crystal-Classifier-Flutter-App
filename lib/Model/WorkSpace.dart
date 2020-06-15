@@ -9,15 +9,16 @@ class Workspace {
 
   Workspace.init();
 
-  createWorkspace(String name, String description, String dateCreated,DocumentReference userDB) async {
+  createWorkspace(String name, String description, String dateCreated,String email) async {
     WorkspaceDescriptor descriptor = WorkspaceDescriptor.init(name, description, dateCreated);
-    bool response = await _firebaseController.createWorkSpace(descriptor,userDB);
+    bool response = await _firebaseController.createWorkSpace(descriptor,email);
     return response;
   }
 
-  fetchAllWorkspaces(DocumentReference userDB)async{
+  fetchAllWorkspaces(String email)async{
     workspaceList = List<WorkspaceDescriptor>();
-    bool response = await _firebaseController.fetchAllWorkspaces(userDB,workspaceList);
+    bool response = await _firebaseController.fetchAllWorkspaces(workspaceList,email);
+    print('workspaceList ${workspaceList.length}');
     return response;
   }
 

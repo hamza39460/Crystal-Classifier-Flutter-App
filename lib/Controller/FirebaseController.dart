@@ -63,9 +63,9 @@ class FirebaseController {
     }
   }
 
-  Future <bool> addUserToDb(UserDescriptor user,File image,DocumentReference userRef)async {
+  Future <bool> addUserToDb(UserDescriptor user,File image)async {
       try{
-      await _firebaseDatabase.addUserToDB(user, image,userRef);
+      await _firebaseDatabase.addUserToDB(user, image);
       return true;
       }
       catch(e){
@@ -75,9 +75,9 @@ class FirebaseController {
       
   }
 
-  Future<bool> getUserFromDB(UserDescriptor user,String email,DocumentReference userRef)async{
+  Future<bool> getUserFromDB(UserDescriptor user,String email)async{
     try{
-      await _firebaseDatabase.getUserFromDB(email, user,userRef);
+      await _firebaseDatabase.getUserFromDB(email, user);
       print("User01: ${user.getUserDetails()}");
       return true;
     }
@@ -104,9 +104,9 @@ class FirebaseController {
       //TODO
   }
 
-  Future<bool> createWorkSpace(WorkspaceDescriptor descriptor,DocumentReference userDB) async {
+  Future<bool> createWorkSpace(WorkspaceDescriptor descriptor,String email) async {
     try{
-      await _firebaseDatabase.createWorkSpace(descriptor, userDB);
+      await _firebaseDatabase.createWorkSpace(descriptor, email);
       return true;
     }
     catch(e){
@@ -120,14 +120,16 @@ class FirebaseController {
 
   }
 
-  Future<bool> fetchAllWorkspaces(DocumentReference userDB,List<WorkspaceDescriptor> workSpaceList) async {
+  Future<bool> fetchAllWorkspaces(List<WorkspaceDescriptor> workSpaceList,String email) async {
     try{
-       List<DocumentSnapshot> workspaceList =  await _firebaseDatabase.fetchAllWorkSpace(userDB);
+       List<DocumentSnapshot> workspaceList =  await _firebaseDatabase.fetchAllWorkSpace(email);
+       if(workSpaceList!=null)
        for (DocumentSnapshot workspaceSnapshot in workspaceList){
+         
           WorkspaceDescriptor workspace = WorkspaceDescriptor.previous(workspaceSnapshot.documentID, workspaceSnapshot.data['Name'], workspaceSnapshot.data['Description'], workspaceSnapshot.data['Created on']);
           workSpaceList.add(workspace);
-
-       }
+       }  
+       return true;
     }
     catch(e){
       print('Get all workspace error $e');

@@ -34,7 +34,7 @@ class UserController extends ChangeNotifier {
      notifyListeners();
     bool response = await _user.loginWithEmailAndPwd(email, pwd);
     if(response==true){
-      _userAuthState = UserAuthState.Authenticated;
+      //_userAuthState = UserAuthState.Authenticated;
       notifyListeners();
       _userDataState = UserDataState.Fetching_User_Data;
       notifyListeners();
@@ -61,10 +61,13 @@ class UserController extends ChangeNotifier {
     notifyListeners();
     bool response = await _user.signupWithEmailAndPwd(name,email, pwd);
     if(response==true){
+      _userDataState = UserDataState.Fetching_User_Data;
+      notifyListeners();
       response = await _user.addUserToDB(image);
       if(response == true){
-        _userAuthState = UserAuthState.Authenticated;
-        notifyListeners();
+        //_userAuthState = UserAuthState.Authenticated;
+        _userDataState = UserDataState.Fetched_User_Data;
+         notifyListeners();
         }
       else{
         _userAuthState = UserAuthState.Error;

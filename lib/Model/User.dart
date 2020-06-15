@@ -27,13 +27,15 @@ class User {
 
   Future<bool> getUserFromDB(email) async {
       _userDetails=UserDescriptor();
-      bool response = await _firebaseController.getUserFromDB(_userDetails, email,_userRef);
-      print("User: $_userDetails");
+      bool response = await _firebaseController.getUserFromDB(_userDetails, email,);
+
+      print("User: ${_userDetails.getUserDetails()}");
+      print("USER REF: ${_userRef.toString()}");
       return response;
   }
 
   Future<bool> addUserToDB(File image) async{
-    bool response = await _firebaseController.addUserToDb(_userDetails, image,_userRef);
+    bool response = await _firebaseController.addUserToDb(_userDetails, image,);
     return response;
   }
 

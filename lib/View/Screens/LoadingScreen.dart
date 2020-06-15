@@ -9,7 +9,7 @@ class LoadingScreen extends StatelessWidget {
     return Stack(
       children: <Widget>[
         BackgroundWidget(),
-        CircularProgressIndicatorWidget(color: whiteColor,)
+        Center(child: CircularProgressIndicatorWidget(color: whiteColor,))
       ],
     );
   }

@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import 'InitUI.dart';
 import 'NoWorkspaceUI.dart';
 
 class SignupUI extends StatelessWidget {
@@ -33,7 +34,8 @@ class SignupUI extends StatelessWidget {
         print(userController.getUserAuthState());
         switch (userController.getUserAuthState()) {
           case UserAuthState.Authenticated:
-            return NoWorkSpaceUI();
+            //return NoWorkSpaceUI();
+            return InitUI();
           case UserAuthState.Uninitialized:
           case UserAuthState.Unauthenticated:
           case UserAuthState.Error:
@@ -109,7 +111,7 @@ class __LoginFormState extends State<_LoginForm> {
   @override
   Widget build(BuildContext context) {
     if (Provider.of<UserController>(context).getUserAuthState() ==
-        UserAuthState.Error) {
+        UserAuthState.Authenticated) {
       _nameController.clear();
       _pwdController.clear();
       _emailController.clear();
@@ -328,6 +330,7 @@ class __LoginFormState extends State<_LoginForm> {
       return true;
     } else if (imageIsFile == false) {
       CustomSnackbar().showError("Please Input your Image");
+      Provider.of<UserController>(context).setUserAuthState(UserAuthState.Error);
     }
     return false;
   }

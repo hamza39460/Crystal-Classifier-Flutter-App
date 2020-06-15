@@ -13,14 +13,13 @@ class FirebaseDatabaseClass{
 
   FirebaseDatabaseClass();
 
-  addUserToDB(UserDescriptor user,File image,DocumentReference userRef)async{
+  addUserToDB(UserDescriptor user,File image)async{
     try{
       print('inner ${user.getUserDetails()}');
       Map<String,dynamic> data=user.getUserDetails();
       StorageUploadTask uploadTask = addProfileToDb(data['Email'], image);
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      userRef = _db.collection('Users').document(data['Email']);
-      userRef.collection('Personal Info').document().setData(
+      getUserRef(data['Email']).collection('Personal Info').document().setData(
       {
       'Name':data['Name'],
       'Profile Image':imageUrl,
@@ -40,10 +39,10 @@ class FirebaseDatabaseClass{
     return _dbStorage.ref().child(filePath).putFile(image);
   }
 
-  getUserFromDB(String email,UserDescriptor user,DocumentReference userRef)async{
+  getUserFromDB(String email,UserDescriptor user)async{
     try{
-      userRef = _db.collection('Users').document(email);
-      QuerySnapshot querySnapshot = await userRef.collection('Personal Info').getDocuments();
+ 
+      QuerySnapshot querySnapshot = await getUserRef(email).collection('Personal Info').getDocuments();
       
       user=user.fromMap(querySnapshot.documents.first.data, email);
       
@@ -54,10 +53,13 @@ class FirebaseDatabaseClass{
     }
   }
 
+  getUserRef(String email){
+    return _db.collection('Users').document(email);
+  }
 
-  createWorkSpace(WorkspaceDescriptor descriptor,DocumentReference userDB){
+  createWorkSpace(WorkspaceDescriptor descriptor,String email){
     try{
-      userDB.collection('Workspaces').document().setData(
+      getUserRef(email).collection('Workspaces').document().setData(
         descriptor.getAllDetails()
       );
     }
@@ -67,13 +69,20 @@ class FirebaseDatabaseClass{
     
   }
 
-  fetchAllWorkSpace(DocumentReference userDB) async {
+  fetchAllWorkSpace(String email) async {
     try{
-       var res = await userDB.collection('Workspaces').getDocuments();
-       List<DocumentSnapshot> workspaceList = res.documents;
-       return workspaceList;  
+       var res = await getUserRef(email).collection('Workspaces').getDocuments();
+       if(res!=null){       
+        List<DocumentSnapshot> workspaceList = res.documents;
+        return workspaceList;
+       }
+       return null;
     }
     catch(e){
+        //print('${}')
+        if(e=='NoSuchMethodError')
+        return null;
+        else 
         throw e;
     }
   }

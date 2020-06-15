@@ -1,5 +1,6 @@
 import 'package:crystal_classifier/Controller/States.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/View/Screens/InitUI.dart';
 import 'package:crystal_classifier/View/Screens/NoWorkspaceUI.dart';
 import 'package:crystal_classifier/View/Screens/SignupUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
@@ -25,11 +26,12 @@ class LoginUI extends StatelessWidget {
       body:ChangeNotifierProvider.value(
       value:UserController.init(),
       child: Consumer<UserController>(builder: (context,userController,child){
-        print(userController.getUserAuthState());
+        debugPrint("User Auth State: ${userController.getUserAuthState()}");
         switch(userController.getUserAuthState()){
           case UserAuthState.Authenticated:
               //TODO Instead of returning find a way to Route and Make it first
-              return NoWorkSpaceUI(); 
+              //return NoWorkSpaceUI(); 
+              return InitUI();
           case UserAuthState.Uninitialized:
           case UserAuthState.Unauthenticated:
           case UserAuthState.Error:

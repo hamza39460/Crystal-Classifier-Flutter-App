@@ -22,7 +22,7 @@ class WorkSpaceController extends ChangeNotifier {
   }
 
   createWorkSpace(String name, String description) async {
-    bool response = await _workspace.createWorkspace(name, description, getTodaysDate(),UserController.init().getUserDbRef());
+    bool response = await _workspace.createWorkspace(name, description, getTodaysDate(),UserController.init().getUserDetails()['Email']);
     if(response  == true){
        
     }
@@ -38,10 +38,12 @@ class WorkSpaceController extends ChangeNotifier {
   fetchAllWorkspaces() async {
     workspaceCurrentState = WorkspaceState.Fetching_All_Workspaces;
     notifyListeners();
-    bool response = await _workspace.fetchAllWorkspaces(UserController.init().getUserDbRef());
+    bool response = await _workspace.fetchAllWorkspaces(UserController.init().getUserDetails()['Email']);
     if(response=true){
       if(getWorkSpaceList().length==0)
+          {
           workspaceCurrentState =  WorkspaceState.No_Workspace_found;
+          }
       else 
           workspaceCurrentState = WorkspaceState.ALl_Workspaces_Fetched;
       notifyListeners();
