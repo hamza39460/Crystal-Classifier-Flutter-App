@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +7,9 @@ import 'package:flutter/rendering.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
-  static int selectedIndex = 0;
+  int selectedIndex;
   final Function(int) callBack;
-  BottomNavBarWidget({@required this.callBack});
+  BottomNavBarWidget({@required this.callBack, this.selectedIndex});
   @override
   _BottomNavBarWidgetState createState() => _BottomNavBarWidgetState();
 }
@@ -15,27 +17,28 @@ class BottomNavBarWidget extends StatefulWidget {
 class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
   @override
   Widget build(BuildContext context) {
+    log('sele:${widget.selectedIndex}');
     final _items = [
       _BottomNavBarItem(
-        icon: Icon(Icons.library_books,size: Common.getSPfont(30)),
+        icon: Icon(Icons.library_books, size: Common.getSPfont(30)),
         index: 0,
-        color: (BottomNavBarWidget.selectedIndex == 0) ? mosqueColor1 : greyColor1,
+        color: (widget.selectedIndex == 0) ? mosqueColor1 : greyColor1,
         onCountSelected: _onPress,
       ),
       Row(
         children: [
           _BottomNavBarItem(
-        icon: Icon(Icons.search,size: Common.getSPfont(30)),
-        index: 1,
-        color: (BottomNavBarWidget.selectedIndex == 1) ? mosqueColor1 : greyColor1,
-        onCountSelected: _onPress,
-      ),
-      _BottomNavBarItem(
-        icon: Icon(CupertinoIcons.person_solid,size: Common.getSPfont(30)),
-        index: 2,
-        color: (BottomNavBarWidget.selectedIndex == 2) ? mosqueColor1 : greyColor1,
-        onCountSelected: _onPress,
-      ),
+            icon: Icon(Icons.search, size: Common.getSPfont(30)),
+            index: 1,
+            color: (widget.selectedIndex == 1) ? mosqueColor1 : greyColor1,
+            onCountSelected: _onPress,
+          ),
+          _BottomNavBarItem(
+            icon: Icon(CupertinoIcons.person_solid, size: Common.getSPfont(30)),
+            index: 2,
+            color: (widget.selectedIndex == 2) ? mosqueColor1 : greyColor1,
+            onCountSelected: _onPress,
+          ),
         ],
       )
     ];
@@ -44,7 +47,6 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
       shape: CircularNotchedRectangle(),
       notchMargin: 8.0,
       child: Row(
-          
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: _items),
@@ -54,12 +56,10 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
   _onPress(int selectedIdex) {
     Common.closeKeyboard(context);
     setState(() {
-      BottomNavBarWidget.selectedIndex = selectedIdex;
+      widget.selectedIndex = selectedIdex;
     });
-    widget.callBack(BottomNavBarWidget.selectedIndex);
+    widget.callBack(widget.selectedIndex);
   }
-
-
 }
 
 class _BottomNavBarItem extends StatelessWidget {

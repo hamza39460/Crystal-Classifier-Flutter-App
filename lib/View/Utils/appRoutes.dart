@@ -1,10 +1,23 @@
+import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
-  static void push(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      new MaterialPageRoute(builder: (context) => page),
-    );
+  static void push(BuildContext context, Widget page, {bool opaque = true}) {
+    Common.closeKeyboard(context);
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: opaque, pageBuilder: (BuildContext context, _, __) => page));
+  }
+
+  static void pushWithThen(
+      BuildContext context, Widget page, Function() thenFunction,
+      {bool opaque = true}) {
+    Common.closeKeyboard(context);
+    Navigator.of(context)
+        .push(new PageRouteBuilder(
+            opaque: opaque, pageBuilder: (BuildContext context, _, __) => page))
+        .then((value) {
+      thenFunction();
+    });
   }
 
   static void replace(BuildContext context, Widget page) {
@@ -20,7 +33,7 @@ class AppRoutes {
     );
   }
 
-  static void removeAllprevious(BuildContext context){
+  static void removeAllprevious(BuildContext context) {
     Navigator.of(context).popUntil((predicate) => predicate.isFirst);
   }
 
@@ -43,5 +56,4 @@ class AppRoutes {
       isScrollControlled: true,
     );
   }
-
 }

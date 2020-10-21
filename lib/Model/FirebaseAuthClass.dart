@@ -1,19 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseAuthClass {
   FirebaseAuth _firebaseAuth;
-  
+
   FirebaseAuthClass(Function onAuthStateChangeCallBack) {
     _firebaseAuth = FirebaseAuth.instance;
-    _firebaseAuth.onAuthStateChanged.listen(onAuthStateChangeCallBack);
+    _firebaseAuth.authStateChanges().listen(onAuthStateChangeCallBack);
   }
 
   getAuthInstance() => _firebaseAuth;
 
   Future<String> loginWithEmailandPwd(String email, String password) async {
-    AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
+    UserCredential result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
-    FirebaseUser user = result.user;
+    User user = result.user;
 
     return user.uid;
   }
@@ -22,15 +23,16 @@ class FirebaseAuthClass {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<String> signUpWithEmailAndPassword(String email, String password) async {
-    AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
+  Future<String> signUpWithEmailAndPassword(
+      String email, String password) async {
+    UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
-    FirebaseUser user = result.user;
+    User user = result.user;
     return user.uid;
   }
-  
-  Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+
+  Future<User> getCurrentUser() async {
+    User user = await _firebaseAuth.currentUser;
     return user;
   }
 
@@ -39,7 +41,7 @@ class FirebaseAuthClass {
   }
 
   Future<void> sendEmailVerification() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = await _firebaseAuth.currentUser;
     try {
       return user.sendEmailVerification();
     } catch (e) {
@@ -48,18 +50,17 @@ class FirebaseAuthClass {
   }
 
   Future<bool> isEmailVerified() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = _firebaseAuth.currentUser;
     await user.reload();
-    return user.isEmailVerified;
+    return user.emailVerified;
   }
 
   Future<bool> loginState() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
+    User user = _firebaseAuth.currentUser;
     if (user != null) {
       return true;
     } else {
       return false;
     }
   }
-
 }

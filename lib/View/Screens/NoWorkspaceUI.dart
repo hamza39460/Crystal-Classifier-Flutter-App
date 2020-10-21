@@ -16,10 +16,10 @@ class NoWorkSpaceUI extends StatelessWidget {
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
     return InkWell(
-          child: Scaffold(
+      child: Scaffold(
         body: _bodyStack(context),
       ),
-      onTap: (){
+      onTap: () {
         _onPress(context);
         //print('Get Started Clikced');
       },
@@ -39,26 +39,43 @@ class NoWorkSpaceUI extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Center(child:AppTitle()),
-        Center(child: Image.asset('assets/images/bookIcon.png'),),
-        ((Provider.of<WorkSpaceController>(context).getWorkspaceCurrentState()==WorkspaceState.Fetching_All_Workspaces) || (Provider.of<WorkSpaceController>(context).getWorkspaceCurrentState()==WorkspaceState.Uninitialized))
-        ? Container()
-        //  CircularProgressIndicatorWidget(color: whiteColor,)
-        :
-         Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Center(child: Text('Did not made any Workspace yet!',style: TextStyle(fontSize: Common.getSPfont(24)),),),
-            Center(child: Text('Touch any where to get started',style: TextStyle(fontSize: Common.getSPfont(18),color: whiteColor,fontWeight: FontWeight.bold),),),
-          ],
-        )
-        
-        
+        Center(child: AppTitle()),
+        Center(
+          child: Image.asset('assets/images/bookIcon.png'),
+        ),
+        ((Provider.of<WorkSpaceController>(context)
+                        .getWorkspaceCurrentState() ==
+                    WorkspaceState.Fetching_All_Workspaces) ||
+                (Provider.of<WorkSpaceController>(context)
+                        .getWorkspaceCurrentState() ==
+                    WorkspaceState.Uninitialized))
+            ? Container()
+            //  CircularProgressIndicatorWidget(color: whiteColor,)
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      'No Workspaces Found',
+                      style: TextStyle(fontSize: Common.getSPfont(24)),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'Touch any where to get started',
+                      style: TextStyle(
+                          fontSize: Common.getSPfont(18),
+                          color: whiteColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              )
       ],
     );
   }
 
-  _onPress(BuildContext context){
+  _onPress(BuildContext context) {
     AppRoutes.bottomSheetOpen(context, CreateWorkSpaceUI());
   }
 }

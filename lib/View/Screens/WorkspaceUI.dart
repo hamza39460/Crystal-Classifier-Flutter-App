@@ -1,5 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:crystal_classifier/Controller/AnalyzeController.dart';
+import 'package:crystal_classifier/Controller/ResultController.dart';
+import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/Controller/WorkspaceController.dart';
+import 'package:crystal_classifier/Model/Result.dart';
+import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
+import 'package:crystal_classifier/View/Screens/CreateWorkspace_Sheet.dart';
+import 'package:crystal_classifier/View/Screens/DeleteAlertScreen.dart';
+import 'package:crystal_classifier/View/Screens/ResultUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
 import 'package:crystal_classifier/View/Utils/appRoutes.dart';
@@ -7,13 +17,34 @@ import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/BackButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
+import 'package:crystal_classifier/View/Widgets/CircularProgressIndicatorWidget.dart';
+import 'package:crystal_classifier/View/Widgets/CircularWidgetDialogWidget.dart';
 import 'package:crystal_classifier/View/Widgets/ExpandTextWidget.dart';
 import 'package:crystal_classifier/View/Widgets/ImageOptionSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 
-class WorkspaceUI extends StatelessWidget {
+class WorkspaceUI extends StatefulWidget {
+  final WorkspaceDescriptor _workspaceDescriptor;
+
+  WorkspaceUI({@required WorkspaceDescriptor workspaceDescriptor})
+      : this._workspaceDescriptor = workspaceDescriptor;
+
+  @override
+  _WorkspaceUIState createState() => _WorkspaceUIState();
+}
+
+class _WorkspaceUIState extends State<WorkspaceUI> {
+  final ResultController _resultController = ResultController();
+
+  @override
+  void initState() {
+    _resultController.getAllResults(widget._workspaceDescriptor,
+        UserController.init().getUserDescriptor().getEmail());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
@@ -25,12 +56,7 @@ class WorkspaceUI extends StatelessWidget {
         ),
         backgroundColor: whiteColor,
         onPressed: () {
-          ImageSelectOptionSheet(
-              context: context,
-              handlerFunction: (ImageSource src) async {
-                File image =
-                    await ImagePicker.pickImage(source: src, imageQuality: 80);
-              });
+          _addNewPressed(context);
         },
       ),
       body: _bodyStack(context),
@@ -48,50 +74,25 @@ class WorkspaceUI extends StatelessWidget {
 
   _bodyColumn(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top: 40),
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Center(
-              child: Row(
-                children: [
-                  BackButtonWidget(),
-                  AppTitle(),
-                ],
-              )
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 14.0, top: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    'ABC',
-                    style: TextStyle(
-                        fontSize: Common.getSPfont(26),
-                        fontWeight: FontWeight.bold,
-                        color: whiteColor),
-                  ),
-                  IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        color: whiteColor,
-                      ),
-                      onPressed: () {
-                        AppRoutes.bottomSheetOpen(
-                            context, _optionsBottomSheet(),
-                            isDismissible: true);
-                      }),
-                ],
-              ),
-            ),
+                child: Row(
+              children: [
+                BackButtonWidget(),
+                AppTitle(),
+              ],
+            )),
+            _showWorkspaceName(context),
             Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 14),
                   child: ExpandedText(
-                    'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu,',
+                    widget._workspaceDescriptor.getDescription(),
                     trimLines: 2,
                     trimCollapsedText: '...Read more',
                     colorClickableText: whiteColor,
@@ -101,43 +102,115 @@ class WorkspaceUI extends StatelessWidget {
                         fontSize: Common.getSPfont(15), color: whiteColor),
                   ),
                 )),
-            _imagesGrid(),
+            _result(),
           ],
         ),
       ),
     );
   }
+
+  Widget _showWorkspaceName(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 14.0, top: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            widget._workspaceDescriptor.getName(),
+            style: TextStyle(
+                fontSize: Common.getSPfont(26),
+                fontWeight: FontWeight.bold,
+                color: whiteColor),
+          ),
+          IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: whiteColor,
+              ),
+              onPressed: () {
+                AppRoutes.bottomSheetOpen(
+                    context,
+                    _OptionsBottomSheet(
+                      workspaceDescriptor: this.widget._workspaceDescriptor,
+                    ),
+                    isDismissible: true);
+              }),
+        ],
+      ),
+    );
+  }
+
+  void _addNewPressed(BuildContext context) {
+    ImageSelectOptionSheet(
+        context: context,
+        handlerFunction: (ImageSource src) async {
+          PickedFile image =
+              await ImagePicker().getImage(source: src, imageQuality: 80);
+          if (image != null) {
+            CircularWidgetDialog().showLoadingDialog(context);
+            AnalyzeController analyzeController = AnalyzeController.init();
+            if (await analyzeController.analyze(File(image.path))) {
+              await _resultController.addResult(
+                  analyzeController.getResult(),
+                  UserController.init().getUserDescriptor(),
+                  this.widget._workspaceDescriptor);
+              CircularWidgetDialog().hideLoadingDialog();
+
+              setState(() {
+                _resultController
+                    .getResultList()
+                    .add(analyzeController.getResult());
+                _resultController
+                    .getStreamController()
+                    .add(ResultState.Fetched);
+              });
+            }
+          }
+        });
+  }
+
+  _result() {
+    return StreamBuilder(
+      stream: _resultController.getStreamController().stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Common.message("An error Occured.", context);
+        }
+        if (!snapshot.hasData || snapshot.data == ResultState.Fetching) {
+          return CircularProgressIndicatorWidget();
+        }
+        if (snapshot.hasData && snapshot.data == ResultState.Fetched) {
+          return _ImagesGrid(
+            results: _resultController.getResultList(),
+            workspaceDescriptor: widget._workspaceDescriptor,
+          );
+        }
+        if (snapshot.hasData && snapshot.data == ResultState.NoData) {
+          return Container(
+            child: Column(
+              children: [
+                Center(
+                  child: Image.asset('assets/images/bookIcon.png'),
+                ),
+                Common.message("No Image Found", context),
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
 }
 
-class _imagesGrid extends StatefulWidget {
+class _ImagesGrid extends StatefulWidget {
+  final List<Result> results;
+  final WorkspaceDescriptor workspaceDescriptor;
+  _ImagesGrid({this.results, this.workspaceDescriptor});
   @override
-  __imagesGridState createState() => __imagesGridState();
+  _ImagesGridState createState() => _ImagesGridState();
 }
 
-class __imagesGridState extends State<_imagesGrid> {
-  final _images = [
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-    'assets/images/crystalImage.png',
-  ];
+class _ImagesGridState extends State<_ImagesGrid> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -145,37 +218,49 @@ class __imagesGridState extends State<_imagesGrid> {
       // width: MediaQuery.of(context).size.width,
       child: GridView.builder(
           shrinkWrap: true,
-          itemCount: _images.length,
+          itemCount: widget.results.length,
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           primary: false,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              //height: 20,
-              //width: MediaQuery.of(context).size.width*0.8,
-              padding: const EdgeInsets.all(10),
-              child: GridTile(
-                child: Image.asset(
-                  _images[index],
-                  height: MediaQuery.of(context).size.height,
-                  width: 150,
-                ),
-                footer: Container(
-                  height: ScreenUtil().setHeight(150),
-                  width: 150,
-                  color: Colors.white,
-                  child: ListTile(
-                    title: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        'Clear',
-                        style: new TextStyle(
-                            fontSize: Common.getSPfont(18),
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black),
+            Result result = widget.results[index];
+            return InkWell(
+              onTap: () {
+                AppRoutes.push(
+                    context,
+                    ResultUI(
+                      workspaceDescriptor: widget.workspaceDescriptor,
+                      result: result,
+                    ));
+              },
+              child: Container(
+                //height: 20,
+                //width: MediaQuery.of(context).size.width*0.8,
+                padding: const EdgeInsets.all(10),
+                child: GridTile(
+                  child: Image.network(
+                    result.getImagePath(),
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.fitWidth,
+                  ),
+                  footer: Container(
+                    height: ScreenUtil().setHeight(150),
+                    width: 150,
+                    color: Colors.white.withOpacity(0.7),
+                    child: ListTile(
+                      title: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${result.getClass()}',
+                          style: new TextStyle(
+                              fontSize: Common.getSPfont(18),
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
+                        ),
                       ),
+                      //trailing: IconButton(icon: Icon(Icons.navigate_next),),
                     ),
-                    //trailing: IconButton(icon: Icon(Icons.navigate_next),),
                   ),
                 ),
               ),
@@ -185,7 +270,9 @@ class __imagesGridState extends State<_imagesGrid> {
   }
 }
 
-class _optionsBottomSheet extends StatelessWidget {
+class _OptionsBottomSheet extends StatelessWidget {
+  WorkspaceDescriptor workspaceDescriptor;
+  _OptionsBottomSheet({this.workspaceDescriptor});
   @override
   Widget build(BuildContext context) {
     return CardBackground(
@@ -195,45 +282,66 @@ class _optionsBottomSheet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          FlatButton.icon(
-            onPressed: () {
-              print('Generate Report Pressed');
-            },
-            icon: Icon(Icons.insert_drive_file),
-            label: Text(
-              'Generate Report',
-              style: TextStyle(
-                  fontSize: Common.getSPfont(18),
-                  color: blackColor,
-                  fontWeight: FontWeight.bold),
+          Container(
+            width: double.infinity,
+            child: FlatButton.icon(
+              onPressed: () {
+                print('Generate Report Pressed');
+              },
+              icon: Icon(Icons.insert_drive_file),
+              label: Text(
+                'Generate Report',
+                style: TextStyle(
+                    fontSize: Common.getSPfont(18),
+                    color: blackColor,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
-          FlatButton.icon(
-            onPressed: () {
-              print('Edit Workspace Pressed');
-            },
-            icon: Icon(
-              Icons.edit,
-            ),
-            label: Text(
-              'Edit Workspace',
-              style: TextStyle(
-                  fontSize: Common.getSPfont(18),
-                  color: blackColor,
-                  fontWeight: FontWeight.bold),
+          Container(
+            width: double.infinity,
+            child: FlatButton.icon(
+              onPressed: () {
+                AppRoutes.pop(context);
+                AppRoutes.bottomSheetOpen(
+                    context,
+                    CreateWorkSpaceUI(
+                      workspaceDescriptor: workspaceDescriptor,
+                    ));
+              },
+              icon: Icon(
+                Icons.edit,
+              ),
+              label: Text(
+                'Edit Workspace',
+                style: TextStyle(
+                    fontSize: Common.getSPfont(18),
+                    color: blackColor,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
-          FlatButton.icon(
-            onPressed: () {
-              print('Delete workspace Pressed');
-            },
-            icon: Icon(Icons.delete),
-            label: Text(
-              'Generate Report',
-              style: TextStyle(
-                  fontSize: Common.getSPfont(18),
-                  color: blackColor,
-                  fontWeight: FontWeight.bold),
+          Container(
+            width: double.infinity,
+            child: FlatButton.icon(
+              onPressed: () {
+                print('Delete workspace Pressed');
+                AppRoutes.pop(context);
+                AppRoutes.push(
+                    context,
+                    DeleteAlertScreen(
+                      workspaceDescriptor: workspaceDescriptor,
+                    ),
+                    opaque: false);
+              },
+              icon: Icon(Icons.delete),
+              label: Text(
+                'Delete Workspace',
+                style: TextStyle(
+                    fontSize: Common.getSPfont(18),
+                    color: blackColor,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],

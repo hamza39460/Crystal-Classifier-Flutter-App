@@ -23,15 +23,16 @@ class LoginUI extends StatelessWidget {
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
     return Scaffold(
-      body:ChangeNotifierProvider.value(
-      value:UserController.init(),
-      child: Consumer<UserController>(builder: (context,userController,child){
+        body: ChangeNotifierProvider.value(
+      value: UserController.init(),
+      child:
+          Consumer<UserController>(builder: (context, userController, child) {
         debugPrint("User Auth State: ${userController.getUserAuthState()}");
-        switch(userController.getUserAuthState()){
+        switch (userController.getUserAuthState()) {
           case UserAuthState.Authenticated:
-              //TODO Instead of returning find a way to Route and Make it first
-              //return NoWorkSpaceUI(); 
-              return InitUI();
+            //TODO Instead of returning find a way to Route and Make it first
+            //return NoWorkSpaceUI();
+            return InitUI();
           case UserAuthState.Uninitialized:
           case UserAuthState.Unauthenticated:
           case UserAuthState.Error:
@@ -40,8 +41,7 @@ class LoginUI extends StatelessWidget {
             return _bodyStack(context);
         }
       }),
-      )
-    );
+    ));
   }
 
   _bodyStack(BuildContext context) {
@@ -104,23 +104,25 @@ class __LoginFormState extends State<_LoginForm> {
       key: _formKey,
       child: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
-              child: Column(
+        child: Column(
           children: <Widget>[
             _showEmailInput(),
             _showPwdInput(),
             _showForgotPasswordInput(),
-            (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Login_in_process)
-            ? CircularProgressIndicatorWidget()
-            :_showLoginBtn(),
+            (Provider.of<UserController>(context).getUserAuthState() ==
+                    UserAuthState.Login_in_process)
+                ? CircularProgressIndicatorWidget()
+                : _showLoginBtn(),
             Container(
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   'Or Google Account',
                   style: TextStyle(fontSize: Common.getSPfont(15)),
                 )),
-            (Provider.of<UserController>(context).getUserAuthState()==UserAuthState.Login_in_process)
-            ? CircularProgressIndicatorWidget()
-            :_showGoogleLoginBtn(),
+            (Provider.of<UserController>(context).getUserAuthState() ==
+                    UserAuthState.Login_in_process)
+                ? CircularProgressIndicatorWidget()
+                : _showGoogleLoginBtn(),
             _showSignupText(context),
           ],
           //_showLoginBtn()
@@ -137,8 +139,8 @@ class __LoginFormState extends State<_LoginForm> {
       keyBoardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       controller: _emailController,
-      onSaved: (value) {  
-        email=value.trim();
+      onSaved: (value) {
+        email = value.trim();
       },
       myNode: _emailNode,
       nextNode: _pwdNode,
@@ -154,15 +156,15 @@ class __LoginFormState extends State<_LoginForm> {
       keyBoardType: TextInputType.visiblePassword,
       controller: _pwdController,
       maxLines: 1,
-      myNode:_pwdNode,
+      myNode: _pwdNode,
       textInputAction: TextInputAction.done,
       validationText: 'Please enter password',
-      onSaved: (value) { 
-        password=value.trim();
-       },
-       onSubmit: (dynamic){
-         _loginPressed(context);
-       },
+      onSaved: (value) {
+        password = value.trim();
+      },
+      onSubmit: (dynamic) {
+        _loginPressed(context);
+      },
     );
   }
 
@@ -186,7 +188,7 @@ class __LoginFormState extends State<_LoginForm> {
     return RoundButtonWidget(
         icon: Icons.forward,
         iconColor: whiteColor,
-        backgroundColor: mosqueColor1,
+        isWhite: false,
         onPress: _loginPressed);
   }
 
@@ -195,11 +197,9 @@ class __LoginFormState extends State<_LoginForm> {
         backgroundColor: whiteColor, onPress: _googleloginPressed);
   }
 
-
-
   _showSignupText(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:90),
+      padding: const EdgeInsets.only(top: 90),
       child: RichText(
         text: TextSpan(
             text: 'Don\'t have account?',
@@ -207,32 +207,33 @@ class __LoginFormState extends State<_LoginForm> {
             children: [
               WidgetSpan(
                   child: Padding(
-                    padding: const EdgeInsets.only(left:8.0),
-                    child: InkWell(
-                      child:  RichText(
-                        text:TextSpan(
-                          text:'Signup here',
-                        style: TextStyle(
-                            color: mosqueColor1, fontSize: Common.getSPfont(15),fontWeight: FontWeight.bold),
-                      ),
-                      ),
-                      onTap: (){
-                        _signupPressed();
-                      },
+                padding: const EdgeInsets.only(left: 8.0),
+                child: InkWell(
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Signup here',
+                      style: TextStyle(
+                          color: mosqueColor1,
+                          fontSize: Common.getSPfont(15),
+                          fontWeight: FontWeight.bold),
                     ),
-                  )),
+                  ),
+                  onTap: () {
+                    _signupPressed();
+                  },
+                ),
+              )),
             ]),
       ),
     );
   }
 
-    _loginPressed(BuildContext context) {
-     print('Signup pressed');
-      if(_validateAndSave()==true){
-        Provider.of<UserController>(context,listen: false).loginWithEmailandPwd(email, password);
-
-      }
-      else
+  _loginPressed(BuildContext context) {
+    print('Signup pressed');
+    if (_validateAndSave() == true) {
+      Provider.of<UserController>(context, listen: false)
+          .loginWithEmailandPwd(email, password);
+    } else
       print('not next');
   }
 
@@ -242,7 +243,7 @@ class __LoginFormState extends State<_LoginForm> {
     });
   }
 
-  _signupPressed(){
+  _signupPressed() {
     AppRoutes.replace(context, SignupUI());
   }
 

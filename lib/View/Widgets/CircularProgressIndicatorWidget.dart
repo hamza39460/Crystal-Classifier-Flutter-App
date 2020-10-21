@@ -6,9 +6,11 @@ class CircularProgressIndicatorWidget extends StatelessWidget {
   CircularProgressIndicatorWidget({this.color});
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator(
-      strokeWidth: 4,
-      valueColor: new AlwaysStoppedAnimation<Color>(color),
+    return Center(
+      child: CircularProgressIndicator(
+        strokeWidth: 4,
+        valueColor: new AlwaysStoppedAnimation<Color>(color),
+      ),
     );
   }
 }

@@ -1,5 +1,11 @@
+import 'dart:developer';
+
+import 'package:crystal_classifier/Controller/States.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/Controller/WorkspaceController.dart';
+import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
 import 'package:crystal_classifier/View/Screens/CreateWorkspace_Sheet.dart';
+import 'package:crystal_classifier/View/Screens/InitUI.dart';
 import 'package:crystal_classifier/View/Screens/UserProfileUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
@@ -8,19 +14,16 @@ import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/BottomNavigationBarWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../Utils/appRoutes.dart';
 import 'WorkspaceUI.dart';
 
-
-
-
 class AllWorkSpacesUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      body:_bodyStack(context),
+      body: _bodyStack(context),
     );
     // Common.ScreenInit(context);
     // return Scaffold(
@@ -96,51 +99,60 @@ class AllWorkSpacesUI extends StatelessWidget {
   }
 }
 
-class _WorkspaceList extends StatelessWidget {
-  final _workspacesName = [
-    'ABC',
-    'DEF',
-    'GHI',
-    'JKL',
-    'MNO',
-    'PQR',
-    'STU',
-    'VWX'
-  ];
-  final _dateCreated = [
-    '02 May, 2020',
-    '02 May, 2020',
-    '02 May, 2020',
-    '02 May, 2020',
-    '02 May, 2020',
-    '02 May, 2020',
-    '02 May, 2020',
-    '02 May, 2020'
-  ];
+class _WorkspaceList extends StatefulWidget {
+  @override
+  __WorkspaceListState createState() => __WorkspaceListState();
+}
+
+class __WorkspaceListState extends State<_WorkspaceList> {
+  List<WorkspaceDescriptor> workSpacesList;
+  @override
+  void initState() {
+    log('ha ${WorkSpaceController.init().getWorkSpaceList().length}');
+    workSpacesList = WorkSpaceController.init().getWorkSpaceList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // if (workSpacesList.isEmpty) {
+    //   Future(() {
+    //     AppRoutes.makeFirst(context, InitUI());
+    //   });
+    // }
     return Container(
-      height: MediaQuery.of(context).size.height,
       child: ListView.builder(
+        shrinkWrap: true,
         physics: ClampingScrollPhysics(),
-        itemCount: _workspacesName.length,
+        itemCount: workSpacesList.length,
         itemBuilder: (BuildContext context, int index) {
+          WorkspaceDescriptor workspaceDescriptor = workSpacesList[index];
+
           return InkWell(
-                      child: Card(
-              child: ListTile(
-                title: Text(
-                  _workspacesName[index],
-                  style: TextStyle(
-                      fontSize: Common.getSPfont(18), color: blackColor),
-                ),
-                subtitle: Text('Created on:${_dateCreated[index]}',
+              child: Card(
+                child: ListTile(
+                  title: Text(
+                    workspaceDescriptor.getName(),
                     style: TextStyle(
-                        fontSize: Common.getSPfont(15), color: greyColor1)),
-                trailing: Icon(Icons.navigate_next),
+                        fontSize: Common.getSPfont(18), color: blackColor),
+                  ),
+                  subtitle: Text(
+                      'Created on:${workspaceDescriptor.getCreationDate()}',
+                      style: TextStyle(
+                          fontSize: Common.getSPfont(15), color: greyColor1)),
+                  trailing: Icon(Icons.navigate_next),
+                ),
               ),
-            ),
-            onTap: ()=>AppRoutes.push(context, WorkspaceUI())
-          );
+              onTap: () => AppRoutes.pushWithThen(
+                      context,
+                      WorkspaceUI(
+                        workspaceDescriptor: workspaceDescriptor,
+                      ), () {
+                    setState(() {
+                      this.workSpacesList =
+                          WorkSpaceController.init().getWorkSpaceList();
+                    });
+                  }));
         },
       ),
     );

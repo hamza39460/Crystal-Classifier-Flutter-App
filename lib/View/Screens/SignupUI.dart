@@ -216,7 +216,7 @@ class __LoginFormState extends State<_LoginForm> {
       child: RoundButtonWidget(
           icon: Icons.forward,
           iconColor: whiteColor,
-          backgroundColor: mosqueColor1,
+          isWhite: false,
           onPress: _signupPressed),
     );
   }
@@ -330,7 +330,8 @@ class __LoginFormState extends State<_LoginForm> {
       return true;
     } else if (imageIsFile == false) {
       CustomSnackbar().showError("Please Input your Image");
-      Provider.of<UserController>(context).setUserAuthState(UserAuthState.Error);
+      Provider.of<UserController>(context)
+          .setUserAuthState(UserAuthState.Error);
     }
     return false;
   }

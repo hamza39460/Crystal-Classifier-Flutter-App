@@ -1,3 +1,6 @@
+import 'package:crystal_classifier/Controller/States.dart';
+import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/View/Screens/InitUI.dart';
 import 'package:crystal_classifier/View/Screens/LoginUI.dart';
 import 'package:crystal_classifier/View/Screens/SignupUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
@@ -8,14 +11,38 @@ import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/ButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class LoginSignupOption extends StatelessWidget {
+class LoginSignupOption extends StatefulWidget {
+  @override
+  _LoginSignupOptionState createState() => _LoginSignupOptionState();
+}
+
+class _LoginSignupOptionState extends State<LoginSignupOption> {
+  @override
+  void initState() {
+    UserController.init().checkLoginState();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
     return Scaffold(
-      body: _bodyStack(context),
-    );
+        body: ChangeNotifierProvider.value(
+      value: UserController.init(),
+      child: Consumer<UserController>(
+        builder: (context, userController, child) {
+          debugPrint("User Auth State: ${userController.getUserAuthState()}");
+          switch (userController.getUserAuthState()) {
+            case UserAuthState.Authenticated:
+              return InitUI();
+            default:
+              return _bodyStack(context);
+          }
+        },
+      ),
+    ));
   }
 
   _bodyStack(BuildContext context) {
@@ -43,7 +70,7 @@ class LoginSignupOption extends StatelessWidget {
   _inputCard(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      margin: const EdgeInsets.only(top:20),
+      margin: const EdgeInsets.only(top: 20),
       child: CardBackground(
         child: Column(
           children: <Widget>[
@@ -56,14 +83,14 @@ class LoginSignupOption extends StatelessWidget {
                       fontSize: Common.getSPfont(24),
                       fontWeight: FontWeight.bold),
                 )),
-              Container(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 8, 0),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                        'This is the first version of Crystal Classifier.\nPlease sign in or create an account below.',
-                        style: TextStyle(fontSize:Common.getSPfont(17)))),
-              _showLoginButton(),
-              _showSignupButton()
+            Container(
+                padding: const EdgeInsets.fromLTRB(10, 0, 8, 0),
+                alignment: Alignment.topLeft,
+                child: Text(
+                    'This is the first version of Crystal Classifier.\nPlease sign in or create an account below.',
+                    style: TextStyle(fontSize: Common.getSPfont(17)))),
+            _showLoginButton(),
+            _showSignupButton()
           ],
         ),
       ),
@@ -75,11 +102,12 @@ class LoginSignupOption extends StatelessWidget {
       text: Text(
         'Login',
         style: TextStyle(
-            fontSize: Common.getSPfont(21), fontWeight: FontWeight.bold, color: mosqueColor1),
+            fontSize: Common.getSPfont(21),
+            fontWeight: FontWeight.bold,
+            color: mosqueColor1),
         textAlign: TextAlign.center,
       ),
-      backgroundColor: whiteColor,
-      shadowColor: mosqueColor0,
+      isWhite: true,
       onPress: _onLoginPress,
     );
   }
@@ -89,24 +117,23 @@ class LoginSignupOption extends StatelessWidget {
       text: Text(
         'Signup',
         style: TextStyle(
-            fontSize: Common.getSPfont(21), fontWeight: FontWeight.bold, color:whiteColor),
+            fontSize: Common.getSPfont(21),
+            fontWeight: FontWeight.bold,
+            color: whiteColor),
         textAlign: TextAlign.center,
       ),
-      backgroundColor: mosqueColor1,
-      shadowColor: whiteColor,
       onPress: _onSignupPress,
     );
   }
 
-  _onLoginPress(BuildContext context){
+  _onLoginPress(BuildContext context) {
     AppRoutes.push(context, LoginUI());
   }
 
-  _onSignupPress(BuildContext context){
+  _onSignupPress(BuildContext context) {
     AppRoutes.push(context, SignupUI());
   }
 }
-
 
 class AppLogo extends StatelessWidget {
   @override

@@ -1,8 +1,9 @@
-import 'package:cache_image/cache_image.dart';
 import 'package:crystal_classifier/Controller/States.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/View/Screens/Login_Signup_OptionUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
+import 'package:crystal_classifier/View/Utils/appRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/ButtonWidget.dart';
@@ -153,13 +154,12 @@ class UserProfileUI extends StatelessWidget {
             decoration: new BoxDecoration(
                 shape: BoxShape.circle,
                 image: new DecorationImage(
-                  fit: BoxFit.scaleDown,
-                  //  image:  CachedNetworkImage(imageUrl:UserController.init().getUserDetails()['Image'] )
-                  image: CacheImage(
-                     UserController.init().getUserDetails()['Image'],
-                  //   )
-                )))
-                )
+                    fit: BoxFit.scaleDown,
+                    //  image:  CachedNetworkImage(imageUrl:UserController.init().getUserDetails()['Image'] )
+                    image: NetworkImage(
+                      UserController.init().getUserDetails()['Image'],
+                      //   )
+                    ))))
         // InkWell(
         //   child: Text(
         //     'Add',
@@ -208,9 +208,8 @@ class UserProfileUI extends StatelessWidget {
 
   _showTermConditionButton(BuildContext context) {
     return ButtonWidget(
-      backgroundColor: greyColor0,
+      isWhite: true,
       onPress: _termsConditionsPressed,
-      shadowColor: null,
       text: Text(
         'Terms and Conditions',
         style: TextStyle(
@@ -221,9 +220,8 @@ class UserProfileUI extends StatelessWidget {
 
   _showLogoutButton(BuildContext context) {
     return ButtonWidget(
-      backgroundColor: greyColor0,
+      isWhite: true,
       onPress: _logoutPressed,
-      shadowColor: null,
       text: Text(
         'Logout',
         style: TextStyle(
@@ -236,7 +234,11 @@ class UserProfileUI extends StatelessWidget {
     debugPrint('Terms and Conditions');
   }
 
-  _logoutPressed(BuildContext context) {
-    debugPrint('Logout Pressed');
+  _logoutPressed(BuildContext context) async {
+    if (await UserController.init().signOut() == true) {
+      Future(() {
+        AppRoutes.makeFirst(context, LoginSignupOption());
+      });
+    }
   }
 }
