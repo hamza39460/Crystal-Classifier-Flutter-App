@@ -18,7 +18,7 @@ class FirebaseDatabaseClass {
 
   addUserToDB(UserDescriptor user, File image) async {
     try {
-      print('inner ${user.getUserDetails()}');
+      //print('inner ${user.getUserDetails()}');
       Map<String, dynamic> data = user.getUserDetails();
       StorageUploadTask uploadTask = addProfileToDb(data['Email'], image);
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
@@ -58,6 +58,17 @@ class FirebaseDatabaseClass {
           getUserRef(email).collection('Workspaces').doc();
       documentReference.set(descriptor.getAllDetails());
       descriptor.setFirebaseID(documentReference.id);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  updateWorkSpace(WorkspaceDescriptor workspaceDescriptor, String email) async {
+    try {
+      await getUserRef(email)
+          .collection('Workspaces')
+          .doc(workspaceDescriptor.getFirebaseId())
+          .update(workspaceDescriptor.getAllDetails());
     } catch (e) {
       throw e;
     }

@@ -113,16 +113,16 @@ class __LoginFormState extends State<_LoginForm> {
                     UserAuthState.Login_in_process)
                 ? CircularProgressIndicatorWidget()
                 : _showLoginBtn(),
-            Container(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Or Google Account',
-                  style: TextStyle(fontSize: Common.getSPfont(15)),
-                )),
-            (Provider.of<UserController>(context).getUserAuthState() ==
-                    UserAuthState.Login_in_process)
-                ? CircularProgressIndicatorWidget()
-                : _showGoogleLoginBtn(),
+            // Container(
+            //     padding: const EdgeInsets.all(20),
+            //     child: Text(
+            //       'Or Google Account',
+            //       style: TextStyle(fontSize: Common.getSPfont(15)),
+            //     )),
+            // (Provider.of<UserController>(context).getUserAuthState() ==
+            //         UserAuthState.Login_in_process)
+            //     ? CircularProgressIndicatorWidget()
+            //     : _showGoogleLoginBtn(),
             _showSignupText(context),
           ],
           //_showLoginBtn()
@@ -199,7 +199,8 @@ class __LoginFormState extends State<_LoginForm> {
 
   _showSignupText(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 90),
+      //alignment: Alignment.bottomCenter,
+      padding: const EdgeInsets.only(top: 250),
       child: RichText(
         text: TextSpan(
             text: 'Don\'t have account?',

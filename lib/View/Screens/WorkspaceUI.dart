@@ -132,6 +132,9 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
                     context,
                     _OptionsBottomSheet(
                       workspaceDescriptor: this.widget._workspaceDescriptor,
+                      then: () {
+                        setState(() {});
+                      },
                     ),
                     isDismissible: true);
               }),
@@ -272,7 +275,8 @@ class _ImagesGridState extends State<_ImagesGrid> {
 
 class _OptionsBottomSheet extends StatelessWidget {
   WorkspaceDescriptor workspaceDescriptor;
-  _OptionsBottomSheet({this.workspaceDescriptor});
+  Function then;
+  _OptionsBottomSheet({this.workspaceDescriptor, this.then});
   @override
   Widget build(BuildContext context) {
     return CardBackground(
@@ -298,16 +302,22 @@ class _OptionsBottomSheet extends StatelessWidget {
               ),
             ),
           ),
+          Divider(
+            color: greyColor3,
+            //height: 10,
+          ),
           Container(
             width: double.infinity,
             child: FlatButton.icon(
               onPressed: () {
                 AppRoutes.pop(context);
-                AppRoutes.bottomSheetOpen(
+                AppRoutes.bottomSheetOpenWithThen(
                     context,
                     CreateWorkSpaceUI(
                       workspaceDescriptor: workspaceDescriptor,
-                    ));
+                    ), () {
+                  this.then();
+                });
               },
               icon: Icon(
                 Icons.edit,
@@ -320,6 +330,10 @@ class _OptionsBottomSheet extends StatelessWidget {
                     fontWeight: FontWeight.bold),
               ),
             ),
+          ),
+          Divider(
+            color: greyColor3,
+            //height: 10,
           ),
           Container(
             width: double.infinity,

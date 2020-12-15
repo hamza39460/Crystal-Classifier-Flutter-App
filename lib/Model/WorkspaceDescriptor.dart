@@ -18,6 +18,13 @@ class WorkspaceDescriptor {
   String getCreationDate() => _dateCreated;
 
   String getFirebaseId() => _firebaseID;
+  String setName(String name) {
+    this._name = name;
+  }
+
+  String setDescription(String description) {
+    this._description = description;
+  }
 
   String setFirebaseID(String id) {
     this._firebaseID = id;

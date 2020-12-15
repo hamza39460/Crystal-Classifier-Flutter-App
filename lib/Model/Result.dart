@@ -7,22 +7,22 @@ class Result {
   File _image;
   String _class;
   double _accuracy;
-  DateTime _dateTime;
+  String _dateTime;
   String _imageFirebasePath;
   Result(
       {@required File image,
       @required String crystalClass,
       @required double accuracy,
-      @required DateTime dateTime})
+      @required String dateTime})
       : _image = image,
         _class = crystalClass,
         _accuracy = accuracy,
         _dateTime = dateTime;
-  Result.two(
+  Result.fromFirebase(
       {@required String image,
       @required String crystalClass,
       @required double accuracy,
-      @required DateTime dateTime})
+      @required String dateTime})
       : _imageFirebasePath = image,
         _class = crystalClass,
         _accuracy = accuracy,
@@ -44,16 +44,16 @@ class Result {
   }
 
   static fromJson(Map<String, dynamic> json) {
-    return Result.two(
+    return Result.fromFirebase(
         image: json['Image Path'],
         crystalClass: json['Class'],
         accuracy: json['Accuracy'],
-        dateTime: json['DateTime'].toDate());
+        dateTime: json['DateTime']);
   }
 
   getClass() => _class;
 
-  getDate() => _dateTime.toIso8601String();
+  getDate() => _dateTime;
 
   getAccuracy() => _accuracy;
 }

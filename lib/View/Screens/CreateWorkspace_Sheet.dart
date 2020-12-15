@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:crystal_classifier/Controller/WorkspaceController.dart';
 import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
 import 'package:crystal_classifier/View/Screens/HomeUI.dart';
@@ -46,6 +48,7 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
   @override
   void initState() {
     if (widget.workspaceDescriptor != null) {
+      log('av');
       _isNew = false;
       _titleController.text = widget.workspaceDescriptor.getName();
       _descController.text = widget.workspaceDescriptor.getDescription();
@@ -134,7 +137,7 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
   Widget _showCreateButton() {
     return ButtonWidget(
       text: Text(
-        'Create Workspace',
+        (_isNew == true) ? 'Create Workspace' : 'Update Workspace Details',
         style: TextStyle(
             fontSize: Common.getSPfont(21),
             fontWeight: FontWeight.bold,
@@ -152,12 +155,14 @@ class __WorkSpaceFormState extends State<_WorkSpaceForm> {
       _current.save();
       if (_isNew == true) {
         WorkSpaceController.init().createWorkSpace(_title, _description);
-        Navigator.of(context).pop();
+        AppRoutes.pop(context);
         //TODO DONT USE APPROUTES
         AppRoutes.makeFirst(context, HomeUI());
-      } else
+      } else {
         WorkSpaceController.init().updateWorkSpaceDetails(
             widget.workspaceDescriptor, _title, _description);
+        AppRoutes.pop(context);
+      }
     }
   }
 }

@@ -64,7 +64,7 @@ class User {
 
   Map<String, String> getUserDetails() => _userDetails.getUserDetails();
 
-  getUserEmail() async {
+  Future<String> getUserEmail() async {
     return await _firebaseController.getUserEmail();
   }
 

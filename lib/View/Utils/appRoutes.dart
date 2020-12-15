@@ -56,4 +56,19 @@ class AppRoutes {
       isScrollControlled: true,
     );
   }
+
+  static void bottomSheetOpenWithThen(
+      BuildContext context, Widget sheet, Function() thenFunction,
+      {isDismissible = false}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return sheet;
+      },
+      isDismissible: isDismissible,
+      isScrollControlled: true,
+    ).then((value) {
+      thenFunction();
+    });
+  }
 }

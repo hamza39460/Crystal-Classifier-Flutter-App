@@ -88,14 +88,14 @@ class ResultUI extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("$label",
+          Text("$label:",
               style: TextStyle(
-                  fontSize: Common.getSPfont(20),
+                  fontSize: Common.getSPfont(18),
                   fontWeight: FontWeight.bold,
                   color: whiteColor)),
           Text("$data",
               style: TextStyle(
-                  fontSize: Common.getSPfont(20),
+                  fontSize: Common.getSPfont(18),
                   fontWeight: FontWeight.bold,
                   color: whiteColor)),
         ],

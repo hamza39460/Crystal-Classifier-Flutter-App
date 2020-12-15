@@ -1,4 +1,4 @@
-enum UserAuthState{
+enum UserAuthState {
   Uninitialized,
   Authenticated,
   Unauthenticated,
@@ -7,14 +7,14 @@ enum UserAuthState{
   Signup_in_process,
 }
 
-enum UserDataState{
-    Uninitialized,
-    Fetching_User_Data,
-    Fetched_User_Data,
-    Error,
+enum UserDataState {
+  Uninitialized,
+  Fetching_User_Data,
+  Fetched_User_Data,
+  Error,
 }
 
-enum WorkspaceState{
+enum WorkspaceState {
   Uninitialized,
   Fetching_All_Workspaces,
   No_Workspace_found,

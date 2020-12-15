@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:crystal_classifier/View/Screens/AllWorkspacesUI.dart';
 import 'package:crystal_classifier/View/Screens/CreateWorkspace_Sheet.dart';
+import 'package:crystal_classifier/View/Screens/InitUI.dart';
 import 'package:crystal_classifier/View/Screens/UserProfileUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
@@ -17,6 +18,11 @@ class HomeUI extends StatefulWidget {
 class _HomeUIState extends State<HomeUI> {
   Widget _currentView = AllWorkSpacesUI();
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Common.ScreenInit(context);

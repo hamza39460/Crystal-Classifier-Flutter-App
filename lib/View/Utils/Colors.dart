@@ -8,5 +8,5 @@ final Color greyColor1 = Color(0xffBFB4B4);
 final Color whiteColor = Color(0xffFFFFFF);
 final Color blackColor = Color(0xff131621);
 // final Color greyColor2=Color(0xffD0D0D2);
-// final Color greyColor3=Color(0xff919099);
+final Color greyColor3 = Color(0xff919099);
 final Color transparentColor = Colors.transparent;

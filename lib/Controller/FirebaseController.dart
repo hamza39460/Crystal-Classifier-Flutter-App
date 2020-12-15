@@ -116,8 +116,6 @@ class FirebaseController {
     }
   }
 
-  bool changeCurrentWorkSpace(String name) {}
-
   Future<bool> fetchAllWorkspaces(
       List<WorkspaceDescriptor> workSpaceList, String email) async {
     try {
@@ -135,6 +133,18 @@ class FirebaseController {
       return true;
     } catch (e) {
       print('Get all workspace error $e');
+      CustomSnackbar().showError('Error $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateWorkspace(
+      WorkspaceDescriptor workspaceDescriptor, String email) async {
+    try {
+      await _firebaseDatabase.updateWorkSpace(workspaceDescriptor, email);
+      return true;
+    } catch (e) {
+      print('Updating Workspace error $e');
       CustomSnackbar().showError('Error $e');
       return false;
     }
@@ -166,9 +176,6 @@ class FirebaseController {
     }
   }
 
-  Future<bool> updateWorkSpaceDetails(
-      String preName, String newName, String description) {}
-
   Future<List> getAllResults(
       WorkspaceDescriptor workspaceDescriptor, String userEmail) async {
     List<Result> results = List();
@@ -188,11 +195,11 @@ class FirebaseController {
     }
   }
 
-  checkLoginState() async {
+  Future<bool> checkLoginState() async {
     return await _firebaseAuth.loginState();
   }
 
-  getUserEmail() async {
+  Future<String> getUserEmail() async {
     User user = await _firebaseAuth.getCurrentUser();
     return user.email;
   }

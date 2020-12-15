@@ -10,8 +10,6 @@ class UserDescriptor {
     this._imageURL = url;
   }
 
-  String getImageUrl() => this._imageURL;
-
   Map<String, String> getUserDetails() {
     return {
       "Name": this._name,
@@ -30,5 +28,7 @@ class UserDescriptor {
     this._name = data['Name'];
   }
 
-  getEmail() => this._email;
+  String getEmail() => this._email;
+  String getName() => this._name;
+  String getImageUrl() => this._imageURL;
 }

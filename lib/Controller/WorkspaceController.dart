@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:crystal_classifier/Controller/States.dart';
@@ -40,8 +41,6 @@ class WorkSpaceController extends ChangeNotifier {
     }
   }
 
-  changeCurrentWorkSpace(String name) {}
-
   fetchAllWorkspaces() async {
     _workspaceCurrentState = WorkspaceState.Fetching_All_Workspaces;
     notifyListeners();
@@ -77,7 +76,12 @@ class WorkSpaceController extends ChangeNotifier {
   }
 
   updateWorkSpaceDetails(WorkspaceDescriptor workspaceDescriptor, String name,
-      String description) {}
+      String description) async {
+    workspaceDescriptor.setName(name);
+    workspaceDescriptor.setDescription(description);
+    return await _workspace.updateWorkspace(
+        workspaceDescriptor, UserController.init().getUserDetails()['Email']);
+  }
 
   generateReport() {}
 

@@ -24,6 +24,11 @@ class Workspace {
     return response;
   }
 
+  updateWorkspace(WorkspaceDescriptor workspaceDescriptor, String email) async {
+    return await _firebaseController.updateWorkspace(
+        workspaceDescriptor, email);
+  }
+
   fetchAllWorkspaces(String email) async {
     _workspaceList = List<WorkspaceDescriptor>();
     bool response =

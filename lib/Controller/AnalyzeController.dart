@@ -7,7 +7,7 @@ import 'package:crystal_classifier/Model/Result.dart';
 class AnalyzeController {
   static final _selfInstace = AnalyzeController._internal();
   AnalyzeController._internal();
-  Result result;
+  
   static final _analyzer = Analyzer();
 
   factory AnalyzeController.init() {
@@ -16,7 +16,7 @@ class AnalyzeController {
 
   analyze(File image) async {
     try {
-      result = await _analyzer.analyzeImage(image);
+      await _analyzer.analyzeImage(image);
       return true;
     } catch (e) {
       log('analyzing error $e');
@@ -24,5 +24,6 @@ class AnalyzeController {
     }
   }
 
-  getResult() => result;
+
+  getResult() => _analyzer.getResult();
 }

@@ -84,20 +84,20 @@ class SignupUI extends StatelessWidget {
   _inputCard(BuildContext context) {
     return CardBackground(
       child: Container(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height * 0.825,
         padding: const EdgeInsets.only(top: 20.0),
-        child: _LoginForm(),
+        child: _SignupForm(),
       ),
     );
   }
 }
 
-class _LoginForm extends StatefulWidget {
+class _SignupForm extends StatefulWidget {
   @override
-  __LoginFormState createState() => __LoginFormState();
+  _SignupFormState createState() => _SignupFormState();
 }
 
-class __LoginFormState extends State<_LoginForm> {
+class _SignupFormState extends State<_SignupForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
@@ -137,17 +137,17 @@ class __LoginFormState extends State<_LoginForm> {
                     UserAuthState.Signup_in_process)
                 ? CircularProgressIndicatorWidget()
                 : _showLoginBtn(),
-            Container(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Or Google Account',
-                  style: TextStyle(fontSize: Common.getSPfont(15)),
-                  textAlign: TextAlign.center,
-                )),
-            (Provider.of<UserController>(context).getUserAuthState() ==
-                    UserAuthState.Signup_in_process)
-                ? CircularProgressIndicatorWidget()
-                : _showGoogleLoginBtn(),
+            // Container(
+            //     padding: const EdgeInsets.all(20),
+            //     child: Text(
+            //       'Or Google Account',
+            //       style: TextStyle(fontSize: Common.getSPfont(15)),
+            //       textAlign: TextAlign.center,
+            //     )),
+            // (Provider.of<UserController>(context).getUserAuthState() ==
+            //         UserAuthState.Signup_in_process)
+            //     ? CircularProgressIndicatorWidget()
+            //     : _showGoogleLoginBtn(),
             _showLoginText(context),
           ],
           //_showLoginBtn()
