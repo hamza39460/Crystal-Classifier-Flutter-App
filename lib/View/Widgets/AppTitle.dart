@@ -6,7 +6,12 @@ class AppTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text('Crystal Classifier',style: TextStyle(fontSize: Common.getSPfont(35),color: mosqueColor0,fontFamily:'Righteous'),)
-    );
+        child: Text(
+      'Crystal Classifierr',
+      style: TextStyle(
+          fontSize: Common.getSPfont(35),
+          color: mosqueColor0,
+          fontFamily: 'Righteous'),
+    ));
   }
 }

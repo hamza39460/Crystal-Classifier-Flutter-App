@@ -18,8 +18,9 @@ class UserDescriptor {
     };
   }
 
-  updateDetails(name) {
+  updateDetails(String name, String email) {
     this._name = name;
+    this._email = email;
   }
 
   fromMap(Map<String, dynamic> data, String email) {

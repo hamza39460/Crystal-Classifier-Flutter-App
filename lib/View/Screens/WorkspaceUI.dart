@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:crystal_classifier/Controller/AnalyzeController.dart';
@@ -152,12 +153,14 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
           if (image != null) {
             CircularWidgetDialog().showLoadingDialog(context);
             AnalyzeController analyzeController = AnalyzeController.init();
-            if (await analyzeController.analyze(File(image.path))) {
+            bool analyzed = await analyzeController.analyze(File(image.path));
+            log('analyzed $analyzed');
+            if (analyzed == true) {
               await _resultController.addResult(
                   analyzeController.getResult(),
                   UserController.init().getUserDescriptor(),
                   this.widget._workspaceDescriptor);
-              CircularWidgetDialog().hideLoadingDialog();
+              log('abc');
 
               setState(() {
                 _resultController
@@ -168,6 +171,7 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
                     .add(ResultState.Fetched);
               });
             }
+            CircularWidgetDialog().hideLoadingDialog();
           }
         });
   }

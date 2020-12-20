@@ -68,7 +68,8 @@ class FirebaseController {
 
   Future<bool> addUserToDb(UserDescriptor user, File image) async {
     try {
-      await _firebaseDatabase.addUserToDB(user, image);
+      await _firebaseDatabase.addUserToDB(
+          user, image, await _firebaseAuth.getCurrentUser());
       return true;
     } catch (e) {
       print('Adding user to DB Error $e');
@@ -78,7 +79,8 @@ class FirebaseController {
 
   Future<bool> getUserFromDB(UserDescriptor user, String email) async {
     try {
-      await _firebaseDatabase.getUserFromDB(email, user);
+      await _firebaseDatabase.getUserFromDB(
+          await _firebaseAuth.getCurrentUser(), user);
       print("User01: ${user.getUserDetails()}");
       return true;
     } catch (e) {
@@ -99,15 +101,31 @@ class FirebaseController {
     }
   }
 
-  Future<bool> updateUserDetails(
-      String email, String name, String password, File image) {
-    //TODO
+  Future<bool> updateUserDetails(UserDescriptor _userDetails, String newEmail,
+      String newName, File newImage, String password) async {
+    try {
+      await _firebaseAuth.reauthenticate(_userDetails.getEmail(), password);
+      if (newEmail != _userDetails.getEmail())
+        await _firebaseAuth.updateEmail(newEmail);
+
+      await _firebaseDatabase.updateNameImage(_userDetails, newName, newImage,
+          await _firebaseAuth.getCurrentUser());
+      _userDetails.updateDetails(newName, newEmail);
+      CustomSnackbar().showSuccess("Updated");
+      return true;
+    } catch (e) {
+      CustomSnackbar().showError(_getError(e));
+      log('Update user to DB Error $e');
+
+      return false;
+    }
   }
 
   Future<bool> createWorkSpace(
       WorkspaceDescriptor descriptor, String email) async {
     try {
-      await _firebaseDatabase.createWorkSpace(descriptor, email);
+      await _firebaseDatabase.createWorkSpace(
+          descriptor, await _firebaseAuth.getCurrentUser());
       return true;
     } catch (e) {
       print('Create Workspace error $e');
@@ -117,10 +135,10 @@ class FirebaseController {
   }
 
   Future<bool> fetchAllWorkspaces(
-      List<WorkspaceDescriptor> workSpaceList, String email) async {
+      List<WorkspaceDescriptor> workSpaceList) async {
     try {
-      List<DocumentSnapshot> workspaceList =
-          await _firebaseDatabase.fetchAllWorkSpace(email);
+      List<DocumentSnapshot> workspaceList = await _firebaseDatabase
+          .fetchAllWorkSpace(await _firebaseAuth.getCurrentUser());
       if (workSpaceList != null)
         for (DocumentSnapshot workspaceSnapshot in workspaceList) {
           WorkspaceDescriptor workspace = WorkspaceDescriptor.previous(
@@ -138,10 +156,11 @@ class FirebaseController {
     }
   }
 
-  Future<bool> updateWorkspace(
-      WorkspaceDescriptor workspaceDescriptor, String email) async {
+  Future<bool> updateWorkspace(WorkspaceDescriptor workspaceDescriptor) async {
     try {
-      await _firebaseDatabase.updateWorkSpace(workspaceDescriptor, email);
+      await _firebaseDatabase.updateWorkSpace(
+          workspaceDescriptor, await _firebaseAuth.getCurrentUser());
+      CustomSnackbar().showSuccess("Updated");
       return true;
     } catch (e) {
       print('Updating Workspace error $e');
@@ -150,10 +169,10 @@ class FirebaseController {
     }
   }
 
-  Future<bool> deleteWorkspace(
-      WorkspaceDescriptor workspaceDescriptor, String email) async {
+  Future<bool> deleteWorkspace(WorkspaceDescriptor workspaceDescriptor) async {
     try {
-      await _firebaseDatabase.deleteWorkSpace(workspaceDescriptor, email);
+      await _firebaseDatabase.deleteWorkSpace(
+          workspaceDescriptor, await _firebaseAuth.getCurrentUser());
       return true;
     } catch (e) {
       print('deleting workspace error $e');
@@ -245,7 +264,17 @@ class FirebaseController {
     } else if (e.code == "ERROR_TOO_MANY_REQUESTS") {
       //_loginError = LoginError.Other;
       return "Too Many attempts from this device. Kindly try again later";
-    } else {
+    } else if (e.code == "invalid-email")
+      return "Invalid Email";
+    else if (e.code == "email-already-in-use")
+      return "Email Already in Use";
+    else if (e.code == "requires-recent-login")
+      return "You Need to login again to edit your profile";
+    else if (e.code == "user-mismatch" || e.code == "wrong-password")
+      return "Invalid Password";
+    else if (e.code == "user-not-found")
+      return "User not found";
+    else {
       //_loginError = LoginError.Other;
       return "Unable to login right now. Kindly try again Later";
     }

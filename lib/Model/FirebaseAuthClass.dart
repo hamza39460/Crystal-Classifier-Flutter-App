@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -61,6 +63,25 @@ class FirebaseAuthClass {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<void> updateEmail(String newEmail) async {
+    try {
+      User user = _firebaseAuth.currentUser;
+      await user.updateEmail(newEmail);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> reauthenticate(String email, String pwd) async {
+    try {
+      User user = _firebaseAuth.currentUser;
+      await user.reauthenticateWithCredential(
+          EmailAuthProvider.credential(email: email, password: pwd));
+    } catch (e) {
+      throw e;
     }
   }
 }

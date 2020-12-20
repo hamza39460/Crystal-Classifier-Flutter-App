@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 class Result {
   File _image;
   String _class;
-  double _accuracy;
+  double _confidence;
   String _dateTime;
   String _imageFirebasePath;
   Result(
@@ -16,7 +16,7 @@ class Result {
       @required String dateTime})
       : _image = image,
         _class = crystalClass,
-        _accuracy = accuracy,
+        _confidence = accuracy,
         _dateTime = dateTime;
   Result.fromFirebase(
       {@required String image,
@@ -25,7 +25,7 @@ class Result {
       @required String dateTime})
       : _imageFirebasePath = image,
         _class = crystalClass,
-        _accuracy = accuracy,
+        _confidence = accuracy,
         _dateTime = dateTime;
 
   setImageFirebasePath(String firebasePath) {
@@ -38,7 +38,7 @@ class Result {
     return {
       'Image Path': this._imageFirebasePath,
       'Class': this._class,
-      'Accuracy': this._accuracy,
+      'Accuracy': this._confidence,
       'DateTime': this._dateTime,
     };
   }
@@ -55,5 +55,5 @@ class Result {
 
   getDate() => _dateTime;
 
-  getAccuracy() => _accuracy;
+  getAccuracy() => _confidence;
 }

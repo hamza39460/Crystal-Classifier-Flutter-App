@@ -1,5 +1,6 @@
 import 'package:crystal_classifier/Controller/States.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
+import 'package:crystal_classifier/View/Screens/EditProfileScreen.dart';
 import 'package:crystal_classifier/View/Screens/Login_Signup_OptionUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
@@ -181,7 +182,7 @@ class UserProfileUI extends StatelessWidget {
   _showEditButton(BuildContext context) {
     return FlatButton(
         onPressed: () {
-          _editProfilePressed();
+          _editProfilePressed(context);
         },
         child: Text(
           'Edit Profile',
@@ -189,8 +190,8 @@ class UserProfileUI extends StatelessWidget {
         ));
   }
 
-  _editProfilePressed() {
-    debugPrint('Edit');
+  _editProfilePressed(BuildContext context) {
+    AppRoutes.push(context, EditProfile());
   }
 
   _showButtons(BuildContext context) {

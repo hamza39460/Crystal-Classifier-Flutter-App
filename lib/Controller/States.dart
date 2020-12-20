@@ -21,3 +21,5 @@ enum WorkspaceState {
   ALl_Workspaces_Fetched,
   Error,
 }
+
+enum UpdateUserDataStatus { Uninitialized, Updating, Updated, Error }

@@ -2,8 +2,10 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crystal_classifier/Model/FirebaseAuthClass.dart';
 import 'package:crystal_classifier/Model/UserDescriptor.dart';
 import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -16,13 +18,14 @@ class FirebaseDatabaseClass {
 
   FirebaseDatabaseClass();
 
-  addUserToDB(UserDescriptor user, File image) async {
+  addUserToDB(UserDescriptor user, File image, User firebaseUser) async {
     try {
       //print('inner ${user.getUserDetails()}');
       Map<String, dynamic> data = user.getUserDetails();
-      StorageUploadTask uploadTask = addProfileToDb(data['Email'], image);
+      StorageUploadTask uploadTask = addProfileToDb(firebaseUser.uid, image);
+
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      getUserRef(data['Email']).collection('Personal Info').doc().set({
+      getUserRef(firebaseUser.uid).collection('Personal Info').doc().set({
         'Name': data['Name'],
         'Profile Image': imageUrl,
       });
@@ -32,30 +35,31 @@ class FirebaseDatabaseClass {
     }
   }
 
-  StorageUploadTask addProfileToDb(String email, File image) {
-    String filePath = 'images/${email}_profile.png';
+  StorageUploadTask addProfileToDb(String userID, File image) {
+    String filePath = 'images/${userID}_profile.png';
+
     return _dbStorage.ref().child(filePath).putFile(image);
   }
 
-  getUserFromDB(String email, UserDescriptor user) async {
+  getUserFromDB(User firebaseUser, UserDescriptor user) async {
     try {
       QuerySnapshot querySnapshot =
-          await getUserRef(email).collection('Personal Info').get();
+          await getUserRef(firebaseUser.uid).collection('Personal Info').get();
 
-      user = user.fromMap(querySnapshot.docs.first.data(), email);
+      user = user.fromMap(querySnapshot.docs.first.data(), firebaseUser.email);
     } catch (e) {
       throw e;
     }
   }
 
-  DocumentReference getUserRef(String email) {
-    return _db.collection('Users').doc(email);
+  DocumentReference getUserRef(String uid) {
+    return _db.collection('Users').doc(uid);
   }
 
-  createWorkSpace(WorkspaceDescriptor descriptor, String email) {
+  createWorkSpace(WorkspaceDescriptor descriptor, User firebaseUser) {
     try {
       DocumentReference documentReference =
-          getUserRef(email).collection('Workspaces').doc();
+          getUserRef(firebaseUser.uid).collection('Workspaces').doc();
       documentReference.set(descriptor.getAllDetails());
       descriptor.setFirebaseID(documentReference.id);
     } catch (e) {
@@ -63,9 +67,9 @@ class FirebaseDatabaseClass {
     }
   }
 
-  updateWorkSpace(WorkspaceDescriptor workspaceDescriptor, String email) async {
+  updateWorkSpace(WorkspaceDescriptor workspaceDescriptor, User user) async {
     try {
-      await getUserRef(email)
+      await getUserRef(user.uid)
           .collection('Workspaces')
           .doc(workspaceDescriptor.getFirebaseId())
           .update(workspaceDescriptor.getAllDetails());
@@ -74,9 +78,10 @@ class FirebaseDatabaseClass {
     }
   }
 
-  fetchAllWorkSpace(String email) async {
+  fetchAllWorkSpace(User firebaseUser) async {
     try {
-      var res = await getUserRef(email).collection('Workspaces').get();
+      var res =
+          await getUserRef(firebaseUser.uid).collection('Workspaces').get();
       if (res != null) {
         List<DocumentSnapshot> workspaceList = res.docs;
         return workspaceList;
@@ -91,9 +96,10 @@ class FirebaseDatabaseClass {
     }
   }
 
-  deleteWorkSpace(WorkspaceDescriptor workspaceDescriptor, String email) async {
+  deleteWorkSpace(
+      WorkspaceDescriptor workspaceDescriptor, User firebaseUser) async {
     try {
-      await getUserRef(email)
+      await getUserRef(firebaseUser.uid)
           .collection('Workspaces')
           .doc(workspaceDescriptor.getFirebaseId())
           .delete();
@@ -152,6 +158,34 @@ class FirebaseDatabaseClass {
         return null;
       else
         throw e;
+    }
+  }
+
+  Future<void> updateNameImage(UserDescriptor user, String newName,
+      File newImage, User firebaseUser) async {
+    try {
+      var imageUrl;
+      log('id ${firebaseUser.uid}');
+      if (newImage != null) {
+        StorageUploadTask uploadTask =
+            addProfileToDb(firebaseUser.uid, newImage);
+
+        imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+        user.setImageUrl(imageUrl);
+      }
+
+      QuerySnapshot snapshot =
+          await getUserRef(firebaseUser.uid).collection('Personal Info').get();
+      log('name $newName');
+      getUserRef(firebaseUser.uid)
+          .collection('Personal Info')
+          .doc(snapshot.docs.first.id)
+          .update({
+        'Name': newName,
+        'Profile Image': imageUrl == null ? user.getImageUrl() : imageUrl,
+      });
+    } catch (e) {
+      throw e;
     }
   }
 }

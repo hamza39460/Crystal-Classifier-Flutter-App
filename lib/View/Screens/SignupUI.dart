@@ -329,7 +329,7 @@ class _SignupFormState extends State<_SignupForm> {
 //      form.reset();
       return true;
     } else if (imageIsFile == false) {
-      CustomSnackbar().showError("Please Input your Image");
+      CustomSnackbar().showError("Please add your Image");
       Provider.of<UserController>(context)
           .setUserAuthState(UserAuthState.Error);
     }

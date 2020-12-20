@@ -25,21 +25,20 @@ class Workspace {
   }
 
   updateWorkspace(WorkspaceDescriptor workspaceDescriptor, String email) async {
-    return await _firebaseController.updateWorkspace(
-        workspaceDescriptor, email);
+    return await _firebaseController.updateWorkspace(workspaceDescriptor);
   }
 
   fetchAllWorkspaces(String email) async {
     _workspaceList = List<WorkspaceDescriptor>();
     bool response =
-        await _firebaseController.fetchAllWorkspaces(_workspaceList, email);
+        await _firebaseController.fetchAllWorkspaces(_workspaceList);
     print('workspaceList0 ${_workspaceList.length}');
     return response;
   }
 
   deleteWorkspace(WorkspaceDescriptor workspaceDescriptor, String email) async {
     bool response =
-        await _firebaseController.deleteWorkspace(workspaceDescriptor, email);
+        await _firebaseController.deleteWorkspace(workspaceDescriptor);
     if (response == true) _workspaceList.remove(workspaceDescriptor);
     return response;
   }

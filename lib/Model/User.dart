@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crystal_classifier/Controller/FirebaseController.dart';
@@ -46,7 +47,12 @@ class User {
     return response;
   }
 
-  bool updateUserDetails(String email, {String name, String pwd}) {}
+  Future<bool> updateUserDetails(
+      String newEmail, String newName, File newImage, String password) async {
+    bool response = await _firebaseController.updateUserDetails(
+        _userDetails, newEmail, newName, newImage, password);
+    return response;
+  }
 
   checkLoginState() async {
     return await _firebaseController.checkLoginState();

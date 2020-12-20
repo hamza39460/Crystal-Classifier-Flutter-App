@@ -12,6 +12,8 @@ class UserController extends ChangeNotifier {
   static final User _user = User.init();
   UserAuthState _userAuthState = UserAuthState.Uninitialized;
   UserDataState _userDataState = UserDataState.Uninitialized;
+  UpdateUserDataStatus _updateUserDataStatus =
+      UpdateUserDataStatus.Uninitialized;
 
   UserController._internal() {
     /** 
@@ -84,7 +86,19 @@ class UserController extends ChangeNotifier {
     return await _user.signout();
   }
 
-  bool updateUserDetails(String email, {String name, String pwd}) {}
+  Future<bool> updateUserDetails(
+      String newEmail, String newName, File newImage, String password) async {
+    _updateUserDataStatus = UpdateUserDataStatus.Updating;
+    notifyListeners();
+    bool response =
+        await _user.updateUserDetails(newEmail, newName, newImage, password);
+    if (response == false) {
+      _updateUserDataStatus = UpdateUserDataStatus.Error;
+    } else
+      _updateUserDataStatus = UpdateUserDataStatus.Error;
+    notifyListeners();
+    _updateUserDataStatus = UpdateUserDataStatus.Uninitialized;
+  }
 
   Map<String, String> getUserDetails() => _user.getUserDetails();
 
@@ -114,4 +128,6 @@ class UserController extends ChangeNotifier {
   UserAuthState getUserAuthState() => this._userAuthState;
 
   UserDataState getUserDataState() => this._userDataState;
+
+  UpdateUserDataStatus getUpdateUserDateState() => this._updateUserDataStatus;
 }
