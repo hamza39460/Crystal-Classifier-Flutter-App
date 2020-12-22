@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:crystal_classifier/Controller/AnalyzeController.dart';
+import 'package:crystal_classifier/Controller/ReportController.dart';
 import 'package:crystal_classifier/Controller/ResultController.dart';
 import 'package:crystal_classifier/Controller/UserController.dart';
 import 'package:crystal_classifier/Controller/WorkspaceController.dart';
@@ -10,6 +11,7 @@ import 'package:crystal_classifier/Model/Result.dart';
 import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
 import 'package:crystal_classifier/View/Screens/CreateWorkspace_Sheet.dart';
 import 'package:crystal_classifier/View/Screens/DeleteAlertScreen.dart';
+import 'package:crystal_classifier/View/Screens/ReportViewerUI.dart';
 import 'package:crystal_classifier/View/Screens/ResultUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
@@ -25,6 +27,8 @@ import 'package:crystal_classifier/View/Widgets/ImageOptionSheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pdfwid;
 
 class WorkspaceUI extends StatefulWidget {
   final WorkspaceDescriptor _workspaceDescriptor;
@@ -50,10 +54,13 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
   Widget build(BuildContext context) {
     Common.ScreenInit(context);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: mosqueColor1,
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text(
+          'Analyze Image',
+          style: TextStyle(
+              fontSize: Common.getSPfont(13),
+              color: mosqueColor1,
+              fontWeight: FontWeight.w600),
         ),
         backgroundColor: whiteColor,
         onPressed: () {
@@ -136,6 +143,7 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
                       then: () {
                         setState(() {});
                       },
+                      results: _resultController.getResultList(),
                     ),
                     isDismissible: true);
               }),
@@ -151,7 +159,8 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
           PickedFile image =
               await ImagePicker().getImage(source: src, imageQuality: 80);
           if (image != null) {
-            CircularWidgetDialog().showLoadingDialog(context);
+            CircularWidgetDialog()
+                .showLoadingDialog(context, message: "Classifying the Image");
             AnalyzeController analyzeController = AnalyzeController.init();
             bool analyzed = await analyzeController.analyze(File(image.path));
             log('analyzed $analyzed');
@@ -280,7 +289,8 @@ class _ImagesGridState extends State<_ImagesGrid> {
 class _OptionsBottomSheet extends StatelessWidget {
   WorkspaceDescriptor workspaceDescriptor;
   Function then;
-  _OptionsBottomSheet({this.workspaceDescriptor, this.then});
+  List<Result> results;
+  _OptionsBottomSheet({this.workspaceDescriptor, this.results, this.then});
   @override
   Widget build(BuildContext context) {
     return CardBackground(
@@ -293,8 +303,25 @@ class _OptionsBottomSheet extends StatelessWidget {
           Container(
             width: double.infinity,
             child: FlatButton.icon(
-              onPressed: () {
-                print('Generate Report Pressed');
+              onPressed: () async {
+                CircularWidgetDialog().showLoadingDialog(context,
+                    message: "Generating the Report");
+                final pdfwid.Document pdf = await ReportController()
+                    .generateReport(this.workspaceDescriptor, this.results);
+                CircularWidgetDialog().hideLoadingDialog();
+                final output = await getTemporaryDirectory();
+                final file = File("${output.path}/report.pdf");
+                await file.writeAsBytes(pdf.save());
+                //OpenFile.open("${output.path}/report.pdf");
+                CircularWidgetDialog().hideLoadingDialog();
+                AppRoutes.push(
+                    context,
+                    ReportViewerUI(
+                      name: this.workspaceDescriptor.getName(),
+                      path: "${output.path}/report.pdf",
+                      pdf: pdf,
+                    ));
+                CircularWidgetDialog().hideLoadingDialog();
               },
               icon: Icon(Icons.insert_drive_file),
               label: Text(

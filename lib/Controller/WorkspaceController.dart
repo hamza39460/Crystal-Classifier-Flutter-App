@@ -87,7 +87,7 @@ class WorkSpaceController extends ChangeNotifier {
 
   getTodaysDate() {
     DateTime today = DateTime.now();
-    String formatDate = DateFormat('d-MMM-yyyy').format(today);
+    String formatDate = DateFormat('MMM d, yyyy').format(today);
     return formatDate;
   }
 

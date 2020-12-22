@@ -48,7 +48,7 @@ class Analyzer {
   }
 
   _formatDate(DateTime dateTime) {
-    return DateFormat('dd-MM-yyyy – HH:mm').add_jm().format(dateTime);
+    return DateFormat('MMM d, yyyy').add_jm().format(dateTime);
   }
 
   getResult() => this._result;

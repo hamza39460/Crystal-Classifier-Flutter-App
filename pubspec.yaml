@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -33,7 +33,11 @@ dependencies:
   progress_dialog: ^1.2.4
   provider: ^4.3.2+2
   tflite: ^1.1.1
-
+  pdf: ^1.13.0
+  path_provider: ^1.6.24
+  flutter_full_pdf_viewer: ^1.0.6
+  printing: ^3.7.2
+  network_image_to_byte: ^0.0.1
 
 dev_dependencies:
   flutter_test:
