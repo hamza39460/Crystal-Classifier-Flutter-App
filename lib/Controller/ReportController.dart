@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:network_image_to_byte/network_image_to_byte.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
+import 'package:printing/printing.dart';
 
 class ReportController {
   static final ReportController _selfInstance = ReportController._internal();
@@ -120,5 +121,14 @@ class ReportController {
   _getToday() {
     DateTime today = DateTime.now();
     return DateFormat('MMM d, yyyy').add_jm().format(today);
+  }
+
+  shareReport(Document pdf, String name) async {
+    await Printing.sharePdf(bytes: pdf.save(), filename: name);
+  }
+
+  printReport(Document pdf) async {
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => pdf.save());
   }
 }

@@ -185,7 +185,7 @@ class FirebaseController {
       WorkspaceDescriptor workspaceDescriptor) async {
     try {
       await _firebaseDatabase.addResultToFirebase(
-          result, user, workspaceDescriptor);
+          result, await _firebaseAuth.getCurrentUser(), workspaceDescriptor);
 
       return true;
     } catch (e) {
@@ -200,7 +200,8 @@ class FirebaseController {
     List<Result> results = List();
     try {
       List<DocumentSnapshot> resultsList =
-          await _firebaseDatabase.getAllResults(workspaceDescriptor, userEmail);
+          await _firebaseDatabase.getAllResults(
+              workspaceDescriptor, await _firebaseAuth.getCurrentUser());
       if (resultsList != null) {
         for (DocumentSnapshot result in resultsList) {
           results.add(Result.fromJson(result.data()));

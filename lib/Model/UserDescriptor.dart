@@ -2,7 +2,6 @@ class UserDescriptor {
   String _name;
   String _email;
   String _imageURL;
-
   UserDescriptor();
   UserDescriptor.init(this._name, this._email);
 

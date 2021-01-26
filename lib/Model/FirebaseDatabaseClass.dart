@@ -108,10 +108,10 @@ class FirebaseDatabaseClass {
     }
   }
 
-  addResultToFirebase(Result result, UserDescriptor user,
+  addResultToFirebase(Result result, User firebaseUser,
       WorkspaceDescriptor workspaceDescriptor) async {
     try {
-      DocumentReference documentReference = await getUserRef(user.getEmail())
+      DocumentReference documentReference = await getUserRef(firebaseUser.uid)
           .collection('Workspaces')
           .doc(workspaceDescriptor.getFirebaseId())
           .collection('Results')
@@ -122,7 +122,7 @@ class FirebaseDatabaseClass {
           documentReference.id);
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
       result.setImageFirebasePath(imageUrl);
-      await getUserRef(user.getEmail())
+      await getUserRef(firebaseUser.uid)
           .collection('Workspaces')
           .doc(workspaceDescriptor.getFirebaseId())
           .collection('Results')
@@ -140,9 +140,9 @@ class FirebaseDatabaseClass {
   }
 
   getAllResults(
-      WorkspaceDescriptor workspaceDescriptor, String userEmail) async {
+      WorkspaceDescriptor workspaceDescriptor, User firebaseUser) async {
     try {
-      var res = await getUserRef(userEmail)
+      var res = await getUserRef(firebaseUser.uid)
           .collection('Workspaces')
           .doc('${workspaceDescriptor.getFirebaseId()}')
           .collection('Results')

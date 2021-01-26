@@ -13,12 +13,14 @@ import 'package:crystal_classifier/View/Screens/CreateWorkspace_Sheet.dart';
 import 'package:crystal_classifier/View/Screens/DeleteAlertScreen.dart';
 import 'package:crystal_classifier/View/Screens/ReportViewerUI.dart';
 import 'package:crystal_classifier/View/Screens/ResultUI.dart';
+import 'package:crystal_classifier/View/Screens/ImageViewerUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
-import 'package:crystal_classifier/View/Utils/appRoutes.dart';
+import 'package:crystal_classifier/View/Utils/AppRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/BackButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
+import 'package:crystal_classifier/View/Widgets/ButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
 import 'package:crystal_classifier/View/Widgets/CircularProgressIndicatorWidget.dart';
 import 'package:crystal_classifier/View/Widgets/CircularWidgetDialogWidget.dart';
@@ -56,7 +58,7 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         label: Text(
-          'Analyze Image',
+          'Upload Image',
           style: TextStyle(
               fontSize: Common.getSPfont(13),
               color: mosqueColor1,
@@ -67,6 +69,7 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
           _addNewPressed(context);
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: _bodyStack(context),
     );
   }
@@ -152,37 +155,26 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
     );
   }
 
-  void _addNewPressed(BuildContext context) {
-    ImageSelectOptionSheet(
-        context: context,
-        handlerFunction: (ImageSource src) async {
-          PickedFile image =
-              await ImagePicker().getImage(source: src, imageQuality: 80);
-          if (image != null) {
-            CircularWidgetDialog()
-                .showLoadingDialog(context, message: "Classifying the Image");
-            AnalyzeController analyzeController = AnalyzeController.init();
-            bool analyzed = await analyzeController.analyze(File(image.path));
-            log('analyzed $analyzed');
-            if (analyzed == true) {
-              await _resultController.addResult(
-                  analyzeController.getResult(),
-                  UserController.init().getUserDescriptor(),
-                  this.widget._workspaceDescriptor);
-              log('abc');
-
-              setState(() {
-                _resultController
-                    .getResultList()
-                    .add(analyzeController.getResult());
-                _resultController
-                    .getStreamController()
-                    .add(ResultState.Fetched);
-              });
-            }
-            CircularWidgetDialog().hideLoadingDialog();
-          }
-        });
+  Future<void> _addNewPressed(BuildContext context) async {
+    //ImageSource.gallery
+    PickedFile image = await ImagePicker()
+        .getImage(source: ImageSource.gallery, imageQuality: 80);
+    if (image != null) {
+      AppRoutes.push(context,
+          ImageViewerUI(file: File(image.path), callBack: _analyzeCallBack));
+    }
+    // ImageSelectOptionSheet(
+    //     context: context,
+    //     handlerFunction: (ImageSource src) async {
+    //       PickedFile image =
+    //           await ImagePicker().getImage(source: src, imageQuality: 80);
+    //       if (image != null) {
+    //         AppRoutes.push(
+    //             context,
+    //             ImageViewerUI(
+    //                 file: File(image.path), callBack: _analyzeCallBack));
+    //       }
+    //     });
   }
 
   _result() {
@@ -215,6 +207,31 @@ class _WorkspaceUIState extends State<WorkspaceUI> {
         }
       },
     );
+  }
+
+  _analyzeCallBack(File image) async {
+    AppRoutes.pop(context);
+    final appDir = await getTemporaryDirectory();
+    File file = File('${appDir.path}/tempimage.png');
+    await file.writeAsBytes(image.readAsBytesSync());
+    CircularWidgetDialog()
+        .showLoadingDialog(context, message: "Classifying the Image");
+    AnalyzeController analyzeController = AnalyzeController.init();
+    bool analyzed = await analyzeController.analyze(file);
+    log('analyzed $analyzed');
+    if (analyzed == true) {
+      await _resultController.addResult(
+          analyzeController.getResult(),
+          UserController.init().getUserDescriptor(),
+          this.widget._workspaceDescriptor);
+      log('abc');
+
+      setState(() {
+        _resultController.getResultList().add(analyzeController.getResult());
+        _resultController.getStreamController().add(ResultState.Fetched);
+      });
+    }
+    CircularWidgetDialog().hideLoadingDialog();
   }
 }
 

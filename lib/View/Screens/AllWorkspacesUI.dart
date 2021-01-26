@@ -9,14 +9,14 @@ import 'package:crystal_classifier/View/Screens/InitUI.dart';
 import 'package:crystal_classifier/View/Screens/UserProfileUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
-import 'package:crystal_classifier/View/Utils/appRoutes.dart';
+import 'package:crystal_classifier/View/Utils/AppRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/BottomNavigationBarWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Utils/appRoutes.dart';
+import '../Utils/AppRoutes.dart';
 import 'WorkspaceUI.dart';
 
 class AllWorkSpacesUI extends StatelessWidget {

@@ -48,7 +48,7 @@ class ResultUI extends StatelessWidget {
             _showImge(context),
             _showResultsData("Classified at", result.getDate()),
             _showResultsData("Classified as", result.getClass()),
-            _showResultsData("Probability", result.getAccuracy()),
+            _showResultsData("Confidence", result.getAccuracy()),
             _showDeleteButton(context),
           ],
         ),

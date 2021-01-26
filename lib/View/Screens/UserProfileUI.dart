@@ -4,7 +4,7 @@ import 'package:crystal_classifier/View/Screens/EditProfileScreen.dart';
 import 'package:crystal_classifier/View/Screens/Login_Signup_OptionUI.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
-import 'package:crystal_classifier/View/Utils/appRoutes.dart';
+import 'package:crystal_classifier/View/Utils/AppRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/AppTitle.dart';
 import 'package:crystal_classifier/View/Widgets/Background.dart';
 import 'package:crystal_classifier/View/Widgets/ButtonWidget.dart';

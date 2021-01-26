@@ -1,6 +1,7 @@
+import 'package:crystal_classifier/Controller/ReportController.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
-import 'package:crystal_classifier/View/Utils/appRoutes.dart';
+import 'package:crystal_classifier/View/Utils/AppRoutes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
 import 'package:pdf/pdf.dart';
@@ -31,8 +32,7 @@ class ReportViewerUI extends StatelessWidget {
             InkWell(
               child: Icon(Icons.share_outlined, size: Common.getSPfont(25)),
               onTap: () async {
-                await Printing.sharePdf(
-                    bytes: pdf.save(), filename: "$name.pdf");
+                await ReportController().shareReport(pdf, "$name.pdf");
               },
             ),
             Padding(
@@ -42,8 +42,7 @@ class ReportViewerUI extends StatelessWidget {
                 child: Icon(Icons.print, size: Common.getSPfont(25)),
                 onTap: () async {
                   //await Printing.
-                  await Printing.layoutPdf(
-                      onLayout: (PdfPageFormat format) async => pdf.save());
+                  await ReportController().printReport(pdf);
                 }),
             Padding(
               padding: const EdgeInsets.all(5),

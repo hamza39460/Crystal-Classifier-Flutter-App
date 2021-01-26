@@ -11,7 +11,7 @@ import 'package:crystal_classifier/View/Widgets/InputWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Utils/appRoutes.dart';
+import '../Utils/AppRoutes.dart';
 import 'AllWorkspacesUI.dart';
 
 class CreateWorkSpaceUI extends StatelessWidget {

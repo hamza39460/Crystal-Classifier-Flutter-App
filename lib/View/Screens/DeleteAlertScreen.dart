@@ -2,7 +2,7 @@ import 'package:crystal_classifier/Controller/WorkspaceController.dart';
 import 'package:crystal_classifier/Model/WorkspaceDescriptor.dart';
 import 'package:crystal_classifier/View/Utils/Colors.dart';
 import 'package:crystal_classifier/View/Utils/Common.dart';
-import 'package:crystal_classifier/View/Utils/appRoutes.dart';
+import 'package:crystal_classifier/View/Utils/AppRoutes.dart';
 import 'package:crystal_classifier/View/Widgets/ButtonWidget.dart';
 import 'package:crystal_classifier/View/Widgets/CardBackground.dart';
 import 'package:flutter/material.dart';

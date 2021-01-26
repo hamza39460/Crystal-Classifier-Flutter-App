@@ -25,21 +25,11 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
         color: (widget.selectedIndex == 0) ? mosqueColor1 : greyColor1,
         onCountSelected: _onPress,
       ),
-      Row(
-        children: [
-          _BottomNavBarItem(
-            icon: Icon(Icons.search, size: Common.getSPfont(30)),
-            index: 1,
-            color: (widget.selectedIndex == 1) ? mosqueColor1 : greyColor1,
-            onCountSelected: _onPress,
-          ),
-          _BottomNavBarItem(
-            icon: Icon(CupertinoIcons.person_solid, size: Common.getSPfont(30)),
-            index: 2,
-            color: (widget.selectedIndex == 2) ? mosqueColor1 : greyColor1,
-            onCountSelected: _onPress,
-          ),
-        ],
+      _BottomNavBarItem(
+        icon: Icon(CupertinoIcons.person_solid, size: Common.getSPfont(30)),
+        index: 2,
+        color: (widget.selectedIndex == 2) ? mosqueColor1 : greyColor1,
+        onCountSelected: _onPress,
       )
     ];
     //_items[selectedIndex].color=greenColor0;

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 class ImageSelectOptionSheet {
   Function handlerFunction;
   BuildContext context;
+
   ImageSelectOptionSheet(
       {@required this.context, @required this.handlerFunction}) {
     (Platform.isIOS)
